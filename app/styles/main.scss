@@ -1,0 +1,199 @@
+$icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+@import "_customVariables";
+// bower:scss
+@import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
+// endbower
+
+$background-color: #FFFFFF;
+$list-group-margin: 5px !default;
+
+html {
+  height: 100%;
+}
+
+body {
+	height: 100%;
+  padding-top: 0px;
+  background-color: $background-color;
+  color: $gray-base;
+}
+
+.body-img-container {
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.page-wrapper {
+	min-height: 100%;
+	height: auto !important; /* This line and the next line are not necessary unless you need IE6 support */
+	height: 100%;
+	margin-bottom: -50px; /* the bottom margin is the negative value of the footer's height */
+  padding-bottom: 40px;
+  margin-top: 15px;
+}
+
+.page-wrapper:after {
+  content: "";
+  display: block;
+    height: 50px;
+}
+
+.logout-icon {
+  margin-top: 10px;
+  margin-right: 15px;
+}
+.top-bar-upper {
+  background: #0094D9;
+}
+
+.top-bar-bottom {
+  height: 120px;
+  background: url("../images/detalheazul.png") no-repeat top right;
+  background-size: 200px;
+}
+
+footer {
+  height: 50px;
+  padding: 20px;
+  color: #FFF;
+  text-align: center;
+  font-size: $font-size-small;
+  background: #0094D9;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e3a94b', endColorstr='#cc5b4f',GradientType=1 );
+
+  a {
+    &:link,
+    &:visited {
+      color: #FFF;
+      font-weight: bold;
+    }
+  }
+}
+
+.task-link {
+
+  &:link,
+  &:visited {
+    color: #FFF;
+  }
+  &:active,
+  &:hover {
+    color: #FFF;
+    text-decoration: none;
+  }
+}
+
+.tasks {
+  margin-top: 40px;
+}
+
+.task {
+  background-color: $gray-dark;
+  border: 1px solid $gray-dark;
+  padding: 10px 15px;
+  margin-bottom: 5px;
+  border-radius: $border-radius-base;
+  transition: transform 0.25s;
+  color: #FFF;
+}
+
+.job {
+  &:hover {
+    background-color: #000;
+    transform: scaleX(1.05);
+  }
+}
+
+.task-status {
+  float: left;
+  width: 120px;
+  padding: 11px 15px 11px 20px;
+  margin: -11px 15px 0 -17px;
+  border-top-left-radius: $border-radius-base;
+  border-bottom-left-radius: $border-radius-base;
+  color: #FFF;
+}
+.task-status-default {
+  width: 180px;
+  border-right: solid 2px $gray-light;
+}
+.task-status-ready {
+  background-color: $brand-info;
+}
+.task-status-running {
+  background-color: $brand-warning;
+}
+.task-status-failed {
+  background-color: $brand-danger;
+}
+.task-status-completed {
+  background-color: $brand-success;
+}
+
+.task-actions {
+  width: 120px;
+  float: right;
+  padding: 6px;
+  margin: -11px 15px 0 -17px;
+  border-top-right-radius: $border-radius-base;
+  border-bottom-right-radius: $border-radius-base;
+  color: #FFF;
+  font-weight: bold;
+  border-left: solid 2px $gray-light;
+}
+
+.task-actions .btn{
+  background: none;
+}
+
+.jobs-table {
+  background: #fff;
+  thead {
+    color: #fff;
+    background-color: #6190A3;
+  }
+  tbody {
+    a {
+      &:link,
+      &:visited {
+        color: #6190A3;
+      }
+    }
+  }
+  thead, tbody {
+    tr {
+      td {
+        padding: 5px;
+      }
+    }
+  }
+}
+
+.job-title {
+  background-color: #000;
+  border: 1px solid #000;
+  padding: 10px 15px 10px 100px;
+  margin-left: -100px;
+  margin-bottom: 5px;
+  border-radius: $border-radius-base;
+  color: #FFF;
+  font-weight: bold;
+}
+
+.form-control {
+  height: 42px;
+  padding: 6px 12px 6px 20px;
+}
+
+.form-control-feedback {
+  height: 40px;
+  line-height: 40px;
+}
+
+.hideDom {
+  display: none;
+}

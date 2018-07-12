@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <ng-show ng-show="compareAuthType('commonauth')">
+      <div uib-alert ng-class="'alert-danger'">
+        <p align="center">
+          Common authentication not implemented.
+        </p>
+      </div>
+      <form id="loginForm" class="hideDOM commonauth" ng-submit="doLogin()">
+        <div class="form-group">
+          <label for="username">Username: </label>
+          <input type="text" class="form-control" id="username" ng-model="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+          <label for="privateKey">Private Key File (RSA format): </label>
+          <input type="file" id="privateKey" name="privateKey" ng-model="privateKey">
+          <p class="help-block">Select your private key file in RSA format.</p>
+        </div>
+        <button type="submit" class="btn btn-default" ng-click="doLogin()">Sign in</button>
+      </form>
+    </ng-show>
+
+    <ng-show ng-show="compareAuthType('ldapauth')">
+      <form id="loginFormLDAP" class="ldapauth" ng-submit="doLogin()">
+        <div class="form-group">
+          <label for="username">LDAP Username: </label>
+          <input type="text" class="form-control" id="ldapUsername" ng-model="username" placeholder="LDAP Username">
+        </div>
+        <div class="form-group">
+          <label for="ldapPassword">LDAP Password: </label>
+          <input type="password" class="form-control" id="ldapPassword" ng-model="password" placeholder="LDAP Password">
+        </div>
+        <button type="button" class="btn btn-default" ng-click="doLogin()">Sign in</button>
+      </form>
+    </ng-show>
+
+    <ng-show ng-show="compareAuthType(undefined)">
+      <div uib-alert ng-class="'alert-danger'">
+        <p align="center">
+          Unable to reach server. Try again later.
+        </p>
+      </div>
+    </ng-show>
+  </div>
+</div>

@@ -1,0 +1,71 @@
+<!-- Template for modal -->
+<script type="text/ng-template" id="myModalContent.html">
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Submit JDF</h3>
+  </div>
+  <div class="modal-body" id="modal-body">
+    <form method="POST" enctype="multipart/form-data" action="/">
+      <input onchange="angular.element(this).scope().fileChanged(this)" type="file" accept="*" />
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="submitJDF()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="closeModal()">Cancel</button>
+  </div>
+</script>
+
+<!-- Page body -->
+<div class="row">
+  <div class="col-sm-8">
+    <div>
+      <button ng-click="openSubmissionModal()">Submit new JDF</button>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="form-group has-feedback">
+      <input type="text" class="form-control" id="inputSuccess2" aria-describedby="inputPesquisarStatus" placeholder="Pesquisar..."
+        ng-model="search">
+      <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+      <span id="inputPesquisarStatus" class="sr-only">Termo da pesquisa</span>
+    </div>
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table table-hover col-md-12 jobs-table">
+    <thead>
+      <tr>
+        <td>Status</td>
+        <td>Name</td>
+        <td>Stop job</td>
+      </tr>
+    </thead>
+    <tbody ng-show="jobs.length">
+      <tr ng-repeat="job in jobs | filter:search">
+        <td class="col-md-2">
+          <a ng-href="/#!/tasks/{{job.id}}">
+            <div class="col-md-12">
+              {{getStatusString(job)}}
+            </div>
+          </a>
+        </td>
+        <td class="col-md-9">
+          <a ng-href="/#!/tasks/{{job.id}}">
+            <div class="col-md-12">
+              {{(job.name) ? job.name : job.id}}
+            </div>
+          </a>
+        </td>
+        <td class="col-md-1">
+          <button class="btn btn-sm col-md-12" ng-click="stopJob(job);" align="center">Stop</button>
+        </td>
+      </tr>
+    </tbody>
+    <tbody ng-hide="jobs.length">
+      <tr>
+        <td colspan="3">
+          No jobs to show.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
