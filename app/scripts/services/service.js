@@ -212,7 +212,9 @@ angular.module('ArrebolServices').service(
           resourceJobUrl,
           form,
           {
+            transformRequest: angular.identity,
             headers: {
+              'X-auth-credentials': JSON.stringify(creds),
               'Content-Type': undefined
             }
           }

@@ -4,9 +4,7 @@
     <h3 class="modal-title" id="modal-title">Submit JDF</h3>
   </div>
   <div class="modal-body" id="modal-body">
-    <form method="POST" enctype="multipart/form-data" action="/">
-      <input onchange="angular.element(this).scope().fileChanged(this)" type="file" accept="*" />
-    </form>
+    <input onchange="angular.element(this).scope().fileChanged(this)" type="file" accept="*" />
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" type="button" ng-click="submitJDF()">OK</button>

@@ -32,7 +32,7 @@ app.constant(
   {
     host: 'http://localhost:44444',
     userEndpoint: '/arrebol/user',
-    jobEndpoint: '/arrebol/job',
+    jobEndpoint: '/job',
     authenticatorEndpoint: '/arrebol/authenticator',
     nonceEndpoint: '/arrebol/nonce'
   }
