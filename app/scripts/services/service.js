@@ -255,3 +255,65 @@ angular.module('ArrebolServices').service(
     return tasksService;
   }
 );
+
+angular.module('ArrebolServices').service(
+	'ExternalOAuthService',
+	function ($http, appConfig, NonceService, Session) {
+		var externalOAuthService = {};
+
+		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
+
+		externalOAuthService.getUserExternalOAuthToken = function (callbackSuccess, callbackError) {
+			var nonceCallback = function (nonce) {
+				var successCallback = function (response) {
+					callbackSuccess(response.data);
+				};
+
+				var user = Session.getUser();
+				$http.get(
+					externalOAuthTokenUrl + '/' + user.name
+				).then(
+					successCallback,
+					callbackError
+				);
+			};
+			NonceService.getNonce(nonceCallback, callbackError);
+		};
+
+		externalOAuthService.requestOwncloudAccessToken = function (authorizationCode, callbackSuccess, callbackError) {
+			let url = appConfig.owncloudServerUrl + "index.php/apps/oauth2/api/v1/token?"
+				+ "grant_type=authorization_code" + "&code=" + authorizationCode + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl;
+			let headers = {
+				'Authorization': 'Basic ' + btoa(appConfig.owncloudClientId + ":" + appConfig.owncloudClientSecret)
+			};
+
+			$http.post(url, {}, {
+				headers: headers
+			}).then(
+				callbackSuccess,
+				callbackError
+			)
+		};
+
+		externalOAuthService.postUserExternalOAuthToken = function (accessToken, refreshToken, successCallback, failCallback) {
+			var user = Session.getUser();
+			let oneHourInSeconds = "3600";
+			let data = {
+				accessToken: accessToken,
+				refreshToken: refreshToken,
+				usernameOwner: user.name,
+				expirationDate: oneHourInSeconds
+			};
+			let headers = {};
+
+			$http.post(externalOAuthTokenUrl, data, {
+				headers: headers
+			}).then(
+				successCallback,
+				failCallback
+			)
+		};
+
+		return externalOAuthService;
+	}
+);
