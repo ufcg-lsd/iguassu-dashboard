@@ -1,62 +1,62 @@
 'use strict';
 
 angular.module('ArrebolServices').service(
-  'Session',
-  function () {
-    var session = {};
-    session.user = {
-      name: undefined,
-      login: undefined,
-      pass: undefined,
-      token: undefined
-    };
+	'Session',
+	function () {
+		var session = {};
+		session.user = {
+			name: undefined,
+			login: undefined,
+			pass: undefined,
+			token: undefined
+		};
 
-    if (window.sessionStorage.user) {
-      if (JSON.parse(window.sessionStorage.user).login !== undefined) {
-        session.user = JSON.parse(window.sessionStorage.user);
-      }
-    } else {
-      window.sessionStorage.user = JSON.stringify(session.user);
-    }
+		if (window.sessionStorage.user) {
+			if (JSON.parse(window.sessionStorage.user).login !== undefined) {
+				session.user = JSON.parse(window.sessionStorage.user);
+			}
+		} else {
+			window.sessionStorage.user = JSON.stringify(session.user);
+		}
 
-    if (JSON.parse(window.sessionStorage.user).login === undefined) {
-      window.sessionStorage.user = JSON.stringify(session.user);
-    } else {
-      session.user = JSON.parse(window.sessionStorage.user);
-    }
+		if (JSON.parse(window.sessionStorage.user).login === undefined) {
+			window.sessionStorage.user = JSON.stringify(session.user);
+		} else {
+			session.user = JSON.parse(window.sessionStorage.user);
+		}
 
-    session.createTokenSession = function (userName, userToken) {
-      console.log('Creating Token Session');
-      session.user = {
-        name: userName,
-        token: userToken
-      };
-      window.sessionStorage.user = JSON.stringify(session.user);
-    };
-    session.createLdapSession = function (userName, login, pass) {
-      console.log('Creating Ldap Session');
-      session.user = {
-        authType: 'ldapauth',
-        name: userName,
-        login: login,
-        pass: pass
-      };
-      window.sessionStorage.user = JSON.stringify(session.user);
-    };
-    session.destroy = function () {
-      session.user = {
-        name: undefined,
-        login: undefined,
-        pass: undefined,
-        token: undefined
-      };
-      window.sessionStorage.user = JSON.stringify(session.user);
-    };
-    session.getUser = function () {
-      return JSON.parse(window.sessionStorage.user);
-    };
-    return session;
-  }
+		session.createTokenSession = function (userName, userToken) {
+			console.log('Creating Token Session');
+			session.user = {
+				name: userName,
+				token: userToken
+			};
+			window.sessionStorage.user = JSON.stringify(session.user);
+		};
+		session.createLdapSession = function (userName, login, pass) {
+			console.log('Creating Ldap Session');
+			session.user = {
+				authType: 'ldapauth',
+				name: userName,
+				login: login,
+				pass: pass
+			};
+			window.sessionStorage.user = JSON.stringify(session.user);
+		};
+		session.destroy = function () {
+			session.user = {
+				name: undefined,
+				login: undefined,
+				pass: undefined,
+				token: undefined
+			};
+			window.sessionStorage.user = JSON.stringify(session.user);
+		};
+		session.getUser = function () {
+			return JSON.parse(window.sessionStorage.user);
+		};
+		return session;
+	}
 );
 
 angular.module('ArrebolServices').service(
@@ -80,66 +80,66 @@ angular.module('ArrebolServices').service(
 );
 
 angular.module('ArrebolServices').service(
-  'AuthenticationService',
-  function ($http, appConfig, NonceService, Session) {
-    var authServ = {};
+	'AuthenticationService',
+	function ($http, appConfig, NonceService, Session) {
+		var authServ = {};
 
-    var resourceAuthUrl = appConfig.host + appConfig.userEndpoint;
-    var resourceAuthenticatorUrl = appConfig.host + appConfig.authenticatorEndpoint;
+		var resourceAuthUrl = appConfig.host + appConfig.userEndpoint;
+		var resourceAuthenticatorUrl = appConfig.host + appConfig.authenticatorEndpoint;
 
-    authServ.checkUser = function () {
-      var user = Session.getUser();
-      if (user.pass === undefined && user.token === undefined) {
-        return false;
-      } else {
-        return true;
-      }
-    };
+		authServ.checkUser = function () {
+			var user = Session.getUser();
+			if (user.pass === undefined && user.token === undefined) {
+				return false;
+			} else {
+				return true;
+			}
+		};
 
-    authServ.getUsername = function () {
-      var user = Session.getUser();
-      return user.name;
-    }
+		authServ.getUsername = function () {
+			var user = Session.getUser();
+			return user.name;
+		};
 
-    authServ.getAuthenticator = function (callbackSuccess, callbackError) {
-      $http.get(resourceAuthenticatorUrl).then(callbackSuccess, callbackError);
-    }
+		authServ.getAuthenticator = function (callbackSuccess, callbackError) {
+			$http.get(resourceAuthenticatorUrl).then(callbackSuccess, callbackError);
+		};
 
-    authServ.ldapSessionLogin = function (userLogin, password, callbackSuccess, callbackError) {
-      var userName = userLogin; //For now user name is the login.
-      Session.createLdapSession(userName, userLogin, password);
+		authServ.ldapSessionLogin = function (userLogin, password, callbackSuccess, callbackError) {
+			var userName = userLogin; //For now user name is the login.
+			Session.createLdapSession(userName, userLogin, password);
 
-      var loginSuccessHandler = function (response) {
-        callbackSuccess(response);
-      };
-      var loginErrorHandler = function (error) {
-        Session.destroy();
-        callbackError(error);
-      };
+			var loginSuccessHandler = function (response) {
+				callbackSuccess(response);
+			};
+			var loginErrorHandler = function (error) {
+				Session.destroy();
+				callbackError(error);
+			};
 
-      var nonceCallback = function (nonce) {
-        var cred = {
-          username: userLogin,
-          password: password,
-          nonce: nonce
-        };
-        var data = {
-          'X-auth-credentials': angular.toJson(cred)
-        };
-        $http.post(
-          resourceAuthUrl,
-          $.param(data)
-        ).then(loginSuccessHandler, loginErrorHandler);
-      };
-      NonceService.getNonce(nonceCallback, loginErrorHandler);
-    };
+			var nonceCallback = function (nonce) {
+				var cred = {
+					username: userLogin,
+					password: password,
+					nonce: nonce
+				};
+				var data = {
+					'X-auth-credentials': angular.toJson(cred)
+				};
+				$http.post(
+					resourceAuthUrl,
+					$.param(data)
+				).then(loginSuccessHandler, loginErrorHandler);
+			};
+			NonceService.getNonce(nonceCallback, loginErrorHandler);
+		};
 
-    authServ.doLogout = function () {
-      Session.destroy();
-    };
+		authServ.doLogout = function () {
+			Session.destroy();
+		};
 
-    return authServ;
-  }
+		return authServ;
+	}
 );
 
 angular.module('ArrebolServices').service(
