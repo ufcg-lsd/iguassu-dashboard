@@ -16,18 +16,22 @@ angular.module('ArrebolControllers').controller(
     $scope.authType = 'not-refreshed';
 	  $scope.userRecentlyGotOAuthToken = false;
 
-    $scope.refreshAuthType = function () {
-      AuthenticationService.getAuthenticator(
-        function (auth) {
-          console.log('Authenticator ' + auth.data);
-          $scope.authType = auth.data;
-        },
-        function (error) {
-          console.log('Couldn\'t reach autheticator.');
-        }
-      )
-    };
-    $scope.refreshAuthType();
+    // $scope.refreshAuthType = function () {
+    //   AuthenticationService.getAuthenticator(
+    //     function (auth) {
+    //       console.log('Authenticator ' + auth.data);
+    //       $scope.authType = auth.data;
+    //     },
+    //     function (error) {
+    //       console.log('Couldn\'t reach autheticator.');
+    //     }
+    //   )
+    // };
+    // $scope.refreshAuthType();
+    //
+    // $scope.compareAuthType = function (auth) {
+    //   return auth === $scope.authType;
+    // };
 
 	  var checkIfUrlHasAuthorizationCode = function () {
 		  let currentUrl = $location.$$absUrl;
@@ -49,18 +53,30 @@ angular.module('ArrebolControllers').controller(
 	  };
 
     $scope.doLogin = function () {
-      if ($scope.authType === 'commonauth') {
 
-      } else if ($scope.authType === 'ldapauth') {
-        AuthenticationService.ldapSessionLogin($scope.username, $scope.password,
-          function () {
-            $location.path('/tasks');
-          },
-          function (error) { //Erro call back
-            console.log('Login error: ' + JSON.stringify(error));
-          }
-        );
-      }
+      let failCallBack = function (error) { //Erro call back
+	      if (error.status == 400) {
+		      // TODO
+		      let req = "http://169.254.0.1/index.php/apps/oauth2/authorize?response_type=code&client_id=TkDJIPaAoovAseBEO0eh9ocHlvUcc7fxxHcSs9oSWvjnpTDT2QUmY71xdcw3boYy&redirect_uri=http://localhost:8000";
+		      $window.location.href = req;
+	      } else {
+		      console.log('Login error: ' + JSON.stringify(error));
+	      }
+      };
+
+	    AuthenticationService.signInWithOAuth($scope.username, doLoginSuccessCallBack, failCallBack);
+
+      // if ($scope.authType === 'oauth') {
+      // } else if ($scope.authType === 'ldapauth') {
+      //   AuthenticationService.ldapSessionLogin($scope.username, $scope.password,
+      //     function () {
+      //       $location.path('/tasks');
+      //     },
+      //     function (error) { //Erro call back
+      //       console.log('Login error: ' + JSON.stringify(error));
+      //     }
+      //   );
+      // }
     };
 
     $scope.getUsername = function () {
