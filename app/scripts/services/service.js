@@ -62,23 +62,23 @@ angular.module('ArrebolServices').service(
 );
 
 angular.module('ArrebolServices').service(
-  'NonceService',
-  function ($http, appConfig) {
-    var nonceServ = {};
+	'NonceService',
+	function ($http, appConfig) {
+		var nonceServ = {};
+		var resourceNonceUrl = appConfig.host + appConfig.nonceEndpoint;
+		// var resourceNonceUrl = 'http://127.0.0.1:8080/nonce'; //TODO
 
-    var resourceNonceUrl = appConfig.host + appConfig.nonceEndpoint;
+		nonceServ.getNonce = function (callbackSuccess, callbackError) {
+			var successCallback = function (response) {
+				callbackSuccess(response.data);
+			};
+			$http
+				.get(resourceNonceUrl)
+				.then(successCallback, callbackError);
+		};
 
-    nonceServ.getNonce = function (callbackSuccess, callbackError) {
-      var successCallback = function (response) {
-        callbackSuccess(response.data);
-      };
-      $http
-        .get(resourceNonceUrl)
-        .then(successCallback, callbackError);
-    };
-
-    return nonceServ;
-  }
+		return nonceServ;
+	}
 );
 
 angular.module('ArrebolServices').service(
@@ -149,127 +149,13 @@ angular.module('ArrebolServices').service(
 );
 
 angular.module('ArrebolServices').service(
-  'TasksService',
-  function ($http, appConfig, NonceService, Session) {
-    var tasksService = {};
-
-    var resourceJobUrl = appConfig.host + appConfig.jobEndpoint;
-
-    tasksService.getTasksList = function (callbackSuccess, callbackError) {
-      var nonceCallback = function (nonce) {
-        var successCallback = function (response) {
-          callbackSuccess(response.data);
-        };
-
-        var user = Session.getUser();
-        var creds = {
-          username: user.name,
-          password: user.pass,
-          nonce: nonce
-        }
-        $http.get(
-          resourceJobUrl,
-          { headers: { 'X-auth-credentials': JSON.stringify(creds) } }
-        ).then(
-          successCallback,
-          callbackError
-          );
-      }
-      NonceService.getNonce(nonceCallback, callbackError);
-    };
-
-    tasksService.getTask = function (jobId, callbackSuccess, callbackError) {
-      var nonceCallback = function (nonce) {
-        var successCallback = function (response) {
-          callbackSuccess(response.data);
-        };
-
-        var user = Session.getUser();
-        var creds = {
-          username: user.name,
-          password: user.pass,
-          nonce: nonce
-        }
-        $http.get(
-          resourceJobUrl + '/' + jobId,
-          { headers: { 'X-auth-credentials': JSON.stringify(creds) } }
-        ).then(
-          successCallback,
-          callbackError
-          );
-      }
-      NonceService.getNonce(nonceCallback, callbackError);
-    }
-
-    tasksService.postJob = function (jdffile, callbackSuccess, callbackError) {
-      var nonceCallback = function (nonce) {
-        var user = Session.getUser();
-        var creds = {
-          username: user.name,
-          password: user.pass,
-          nonce: nonce
-        }
-
-        var form = new FormData();
-        form.append('jdffilepath', jdffile);
-        form.append('X-auth-credentials', angular.toJson(creds));
-
-        $http.post(
-          resourceJobUrl,
-          form,
-          {
-            transformRequest: angular.identity,
-            headers: {
-              'X-auth-credentials': JSON.stringify(creds),
-              'Content-Type': undefined
-            }
-          }
-        ).then(
-          callbackSuccess,
-          callbackError
-          );
-      }
-      NonceService.getNonce(nonceCallback, callbackError);
-    };
-
-    tasksService.deleteJob = function (jobId, callbackSuccess, callbackError) {
-      var nonceCallback = function (nonce) {
-        var user = Session.getUser();
-        var creds = {
-          username: user.name,
-          password: user.pass,
-          nonce: nonce
-        }
-
-        $http.delete(
-          resourceJobUrl + '/' + jobId,
-          {
-            headers: {
-              'X-auth-credentials': JSON.stringify(creds)
-            }
-          }
-        ).then(
-          function(response) {
-            callbackSuccess(response.data);
-          },
-          callbackError
-          );
-      }
-      NonceService.getNonce(nonceCallback, callbackError);
-    };
-
-    return tasksService;
-  }
-);
-
-angular.module('ArrebolServices').service(
-	'ExternalOAuthService',
+	'TasksService',
 	function ($http, appConfig, NonceService, Session) {
-		var externalOAuthService = {};
+		var tasksService = {};
 
 		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
 
-		externalOAuthService.getUserExternalOAuthToken = function (callbackSuccess, callbackError) {
+		tasksService.getTasksList = function (callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {
 				var successCallback = function (response) {
 					callbackSuccess(response.data);
@@ -284,6 +170,131 @@ angular.module('ArrebolServices').service(
 				);
 			};
 			NonceService.getNonce(nonceCallback, callbackError);
+		};
+
+		tasksService.getTask = function (jobId, callbackSuccess, callbackError) {
+			var nonceCallback = function (nonce) {
+				var successCallback = function (response) {
+					callbackSuccess(response.data);
+				};
+
+				var user = Session.getUser();
+				var creds = {
+					username: user.name,
+					password: user.pass,
+					nonce: nonce
+				}
+				$http.get(
+					resourceJobUrl + '/' + jobId,
+					{headers: {'X-auth-credentials': JSON.stringify(creds)}}
+				).then(
+					successCallback,
+					callbackError
+				);
+			}
+			NonceService.getNonce(nonceCallback, callbackError);
+		};
+
+		tasksService.postJob = function (jdffile, callbackSuccess, callbackError) {
+			var nonceCallback = function (nonce) {
+				var user = Session.getUser();
+				var creds = {
+					username: user.name,
+					password: user.pass,
+					nonce: nonce
+				};
+
+				var form = new FormData();
+				form.append('jdffilepath', jdffile);
+				form.append('X-auth-credentials', angular.toJson(creds));
+
+				$http.post(
+					resourceJobUrl,
+					form,
+					{
+						transformRequest: angular.identity,
+						transformResponse: function myTransformFn(data, headersGetter, status) {
+							return JSON.stringify(data);
+						},
+						headers: {
+							'X-auth-credentials': JSON.stringify(creds),
+							'Accept': 'application/json',
+							'Content-Type': undefined
+						}
+					}
+				).then(
+					callbackSuccess,
+					callbackError
+				);
+			};
+			NonceService.getNonce(nonceCallback, callbackError);
+		};
+
+		tasksService.deleteJob = function (jobId, callbackSuccess, callbackError) {
+			var nonceCallback = function (nonce) {
+				var user = Session.getUser();
+				var creds = {
+					username: user.name,
+					password: user.pass,
+					nonce: nonce
+				}
+
+				$http.delete(
+					resourceJobUrl + '/' + jobId,
+					{
+						headers: {
+							'X-auth-credentials': JSON.stringify(creds)
+						}
+					}
+				).then(
+					function (response) {
+						callbackSuccess(response.data);
+					},
+					callbackError
+				);
+			}
+			NonceService.getNonce(nonceCallback, callbackError);
+		};
+
+		return tasksService;
+	}
+);
+
+angular.module('ArrebolServices').service(
+	'ExternalOAuthService',
+	function ($http, appConfig, NonceService, Session) {
+		var externalOAuthService = {};
+
+		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
+
+		// externalOAuthService.getUserExternalOAuthToken = function (callbackSuccess, callbackError) {
+		// 	var nonceCallback = function (nonce) {
+		// 		var successCallback = function (response) {
+		// 			callbackSuccess(response.data);
+		// 		};
+		//
+		// 		var user = Session.getUser();
+		// 		$http.get(
+		// 			externalOAuthTokenUrl + '/' + user.name
+		// 		).then(
+		// 			successCallback,
+		// 			callbackError
+		// 		);
+		// 	};
+		// 	NonceService.getNonce(nonceCallback, callbackError);
+		// };
+
+		externalOAuthService.getUserExternalOAuthToken = function (userName, callbackSuccess, callbackError) {
+			var successCallback = function (response) {
+				callbackSuccess(response.data);
+			};
+
+			$http.get(
+				externalOAuthTokenUrl + '/' + userName
+			).then(
+				successCallback,
+				callbackError
+			);
 		};
 
 		externalOAuthService.requestOwncloudAccessToken = function (authorizationCode, callbackSuccess, callbackError) {
