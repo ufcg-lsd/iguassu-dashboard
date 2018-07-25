@@ -33,17 +33,6 @@ angular.module('ArrebolServices').service(
 			window.sessionStorage.user = JSON.stringify(session.user);
 		};
 
-		// session.createLdapSession = function (userName, login, pass) {
-		// 	console.log('Creating Ldap Session');
-		// 	session.user = {
-		// 		authType: 'ldapauth',
-		// 		name: userName,
-		// 		login: login,
-		// 		pass: pass
-		// 	};
-		// 	window.sessionStorage.user = JSON.stringify(session.user);
-		// };
-
 		session.destroy = function () {
 			session.user = {
 				name: undefined,
@@ -103,39 +92,6 @@ angular.module('ArrebolServices').service(
 			var user = Session.getUser();
 			return user.name;
 		};
-
-		// authServ.getAuthenticator = function (callbackSuccess, callbackError) {
-		// 	$http.get(resourceAuthenticatorUrl).then(callbackSuccess, callbackError);
-		// };
-
-		// authServ.ldapSessionLogin = function (userLogin, password, callbackSuccess, callbackError) {
-		// 	var userName = userLogin; //For now user name is the login.
-		// 	Session.createLdapSession(userName, userLogin, password);
-		//
-		// 	var loginSuccessHandler = function (response) {
-		// 		callbackSuccess(response);
-		// 	};
-		// 	var loginErrorHandler = function (error) {
-		// 		Session.destroy();
-		// 		callbackError(error);
-		// 	};
-		//
-		// 	var nonceCallback = function (nonce) {
-		// 		var cred = {
-		// 			username: userLogin,
-		// 			password: password,
-		// 			nonce: nonce
-		// 		};
-		// 		var data = {
-		// 			'X-auth-credentials': angular.toJson(cred)
-		// 		};
-		// 		$http.post(
-		// 			resourceAuthUrl,
-		// 			$.param(data)
-		// 		).then(loginSuccessHandler, loginErrorHandler);
-		// 	};
-		// 	NonceService.getNonce(nonceCallback, loginErrorHandler);
-		// };
 
 		authServ.doLogout = function () {
 			Session.destroy();
@@ -198,7 +154,7 @@ angular.module('ArrebolServices').service(
 					successCallback,
 					callbackError
 				);
-			}
+			};
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
 
@@ -244,7 +200,7 @@ angular.module('ArrebolServices').service(
 					username: user.name,
 					password: user.pass,
 					nonce: nonce
-				}
+				};
 
 				$http.delete(
 					resourceJobUrl + '/' + jobId,
@@ -259,7 +215,7 @@ angular.module('ArrebolServices').service(
 					},
 					callbackError
 				);
-			}
+			};
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
 
@@ -273,23 +229,6 @@ angular.module('ArrebolServices').service(
 		var externalOAuthService = {};
 
 		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
-
-		// externalOAuthService.getUserExternalOAuthToken = function (callbackSuccess, callbackError) {
-		// 	var nonceCallback = function (nonce) {
-		// 		var successCallback = function (response) {
-		// 			callbackSuccess(response.data);
-		// 		};
-		//
-		// 		var user = Session.getUser();
-		// 		$http.get(
-		// 			externalOAuthTokenUrl + '/' + user.name
-		// 		).then(
-		// 			successCallback,
-		// 			callbackError
-		// 		);
-		// 	};
-		// 	NonceService.getNonce(nonceCallback, callbackError);
-		// };
 
 		externalOAuthService.getUserExternalOAuthToken = function (userName, callbackSuccess, callbackError) {
 			var successCallback = function (response) {
@@ -320,7 +259,6 @@ angular.module('ArrebolServices').service(
 		};
 
 		externalOAuthService.postUserExternalOAuthToken = function (userName, accessToken, refreshToken, successCallback, failCallback) {
-			// var user = Session.getUser();
 			let oneHourInSeconds = "3600";
 			let data = {
 				accessToken: accessToken,
