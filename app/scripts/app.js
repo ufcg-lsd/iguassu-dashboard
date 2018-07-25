@@ -30,11 +30,18 @@ angular.module('ArrebolServices', ['ngResource']);
 app.constant(
   'appConfig',
   {
-    host: 'http://localhost:44444',
-    userEndpoint: '/arrebol/user',
+    host: 'http://10.11.4.10:44444',
+
     jobEndpoint: '/job',
-    authenticatorEndpoint: '/arrebol/authenticator',
-    nonceEndpoint: '/arrebol/nonce'
+    nonceEndpoint: '/nonce',
+    oAuthEndpoint: '/oauthtoken/',
+
+	  iguassuServerHost: 'http://127.0.0.1:8080',
+
+		owncloudServerUrl: 'http://169.254.0.1/',
+    owncloudClientId: 'TkDJIPaAoovAseBEO0eh9ocHlvUcc7fxxHcSs9oSWvjnpTDT2QUmY71xdcw3boYy',
+		owncloudClientSecret: 'hoX2FDChXUWAQ1S1vIQ7SsicRvcxuZJ71yUIjtcCyLFch32Vf8QYdFAZysbmWM2v',
+		owncloudClientRedirectUrl: 'http://localhost:8000'
   }
 );
 

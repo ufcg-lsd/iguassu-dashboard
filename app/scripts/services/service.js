@@ -55,8 +55,7 @@ angular.module('ArrebolServices').service(
 	'NonceService',
 	function ($http, appConfig) {
 		var nonceServ = {};
-		var resourceNonceUrl = appConfig.host + appConfig.nonceEndpoint;
-		// var resourceNonceUrl = 'http://127.0.0.1:8080/nonce'; //TODO
+		var resourceNonceUrl = appConfig.iguassuServerHost + appConfig.nonceEndpoint;
 
 		nonceServ.getNonce = function (callbackSuccess, callbackError) {
 			var successCallback = function (response) {
@@ -75,9 +74,6 @@ angular.module('ArrebolServices').service(
 	'AuthenticationService',
 	function ($http, appConfig, NonceService, Session, ExternalOAuthService) {
 		var authServ = {};
-
-		var resourceAuthUrl = appConfig.host + appConfig.userEndpoint;
-		var resourceAuthenticatorUrl = appConfig.host + appConfig.authenticatorEndpoint;
 
 		authServ.checkUser = function () {
 			var user = Session.getUser();
@@ -110,7 +106,7 @@ angular.module('ArrebolServices').service(
 	function ($http, appConfig, NonceService, Session) {
 		var tasksService = {};
 
-		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
+		var resourceJobUrl = appConfig.iguassuServerHost + appConfig.jobEndpoint;
 
 		tasksService.getTasksList = function (callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {

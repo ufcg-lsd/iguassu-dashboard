@@ -9,7 +9,7 @@
  */
 angular.module('ArrebolControllers').controller(
   'AuthCtrl',
-  function ($rootScope, $scope, $location, toastr, Session, AuthenticationService, ExternalOAuthService, $window) {
+  function ($rootScope, $scope, $location, $window, toastr, Session, AuthenticationService, ExternalOAuthService, appConfig) {
 
     $scope.username = undefined;
     $scope.password = undefined;
@@ -38,9 +38,9 @@ angular.module('ArrebolControllers').controller(
     $scope.doLogin = function () {
 
       let failCallBack = function (error) { //Erro call back
-	      if (error.status == 400) {
-		      // TODO
-		      let req = "http://169.254.0.1/index.php/apps/oauth2/authorize?response_type=code&client_id=TkDJIPaAoovAseBEO0eh9ocHlvUcc7fxxHcSs9oSWvjnpTDT2QUmY71xdcw3boYy&redirect_uri=http://localhost:8000";
+	      if (error.status === 400) {
+		      let req = appConfig.owncloudServerUrl + "index.php/apps/oauth2/authorize" + "?response_type=code&" +
+			      "client_id=" + appConfig.owncloudClientId + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl;
 		      $window.location.href = req;
 	      } else {
 		      console.log('Login error: ' + JSON.stringify(error));
