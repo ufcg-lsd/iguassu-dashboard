@@ -52,9 +52,11 @@ angular.module('ArrebolServices').service(
 			};
 			window.sessionStorage.user = JSON.stringify(session.user);
 		};
+
 		session.getUser = function () {
 			return JSON.parse(window.sessionStorage.user);
 		};
+
 		return session;
 	}
 );
@@ -81,7 +83,7 @@ angular.module('ArrebolServices').service(
 
 angular.module('ArrebolServices').service(
 	'AuthenticationService',
-	function ($http, appConfig, NonceService, Session) {
+	function ($http, appConfig, NonceService, Session, ExternalOAuthService) {
 		var authServ = {};
 
 		var resourceAuthUrl = appConfig.host + appConfig.userEndpoint;
@@ -89,7 +91,7 @@ angular.module('ArrebolServices').service(
 
 		authServ.checkUser = function () {
 			var user = Session.getUser();
-			if (user.pass === undefined && user.token === undefined) {
+			if (user.token === undefined) {
 				return false;
 			} else {
 				return true;
@@ -136,6 +138,10 @@ angular.module('ArrebolServices').service(
 
 		authServ.doLogout = function () {
 			Session.destroy();
+		};
+
+		authServ.signInWithOAuth = function (userName, callbackSuccess, callbackError) {
+			ExternalOAuthService.getUserExternalOAuthToken(userName, callbackSuccess, callbackError);
 		};
 
 		return authServ;
