@@ -14,26 +14,6 @@ angular.module('ArrebolControllers').controller(
 		$scope.jobs = [];
 		$scope.search = [];
 
-		// var checkIfUserHasOAuthToken = function (successCallBack, failCallback) {
-		// 	ExternalOAuthService.getUserExternalOAuthToken(successCallBack, failCallback);
-		// };
-
-		// var checkIfUrlHasAuthorizationCode = function () {
-		// 	let currentUrl = $location.$$absUrl;
-		// 	let re = /code=[a-zA-Z0-9.]+(?=#!)/;
-		// 	let regexAns = re.exec(currentUrl);
-		// 	if (regexAns !== null && typeof regexAns[0] === "string") {
-		// 		let splittedRegexAns = regexAns[0].split("=");
-		// 		let authorizationCode = splittedRegexAns[1];
-		// 		return authorizationCode;
-		// 	}
-		// };
-
-		// var cleanExternalAuthCodeFromUrl = function () {
-		// 	console.log($location);
-		// 	$location.url($location.path()); //TODO
-		// };
-
 		$scope.updateTaskList = function () {
 			var successCallback = function (data) {
 				$scope.jobs = data;
@@ -98,55 +78,6 @@ angular.module('ArrebolControllers').controller(
 				}
 			)
 
-			// var successCallBack = function (data) {
-			// 	let token = data.token;
-			// 	var modalInstance = $uibModal.open(
-			// 		{
-			// 			animation: true,
-			// 			ariaLabelledBy: 'modal-title',
-			// 			ariaDescribedBy: 'modal-body',
-			// 			templateUrl: 'myModalContent.html',
-			// 			controller: 'SubmissionModalCtrl'
-			// 		}
-			// 	);
-			// 	modalInstance.result.then(
-			// 		function (jobId) {
-			// 			if (jobId) {
-			// 				toastr.success('Job ' + jobId + ' submitted.')
-			// 			}
-			// 			$scope.updateTaskList();
-			// 		},
-			// 		function (error) {
-			// 			toastr.error(error);
-			// 			$scope.updateTaskList();
-			// 		}
-			// 	)
-			// };
-
-			// 	var failCallback = function (error) {
-			// 		if (error.status == 400) {
-			// 			// TODO
-			// 			let req = "http://169.254.0.1/index.php/apps/oauth2/authorize?response_type=code&client_id=TkDJIPaAoovAseBEO0eh9ocHlvUcc7fxxHcSs9oSWvjnpTDT2QUmY71xdcw3boYy&redirect_uri=http://localhost:8000";
-			// 			$window.location.href = req;
-			// 		} else {
-			// 			console.log(error);
-			// 		}
-			// 	};
-			// 	checkIfUserHasOAuthToken(successCallBack, failCallback);
-			// };
-			//
-			// let authorizationCode = checkIfUrlHasAuthorizationCode();
-			// if (authorizationCode !== undefined) {
-			// 	var failCallback = function (error) {
-			// 		console.log(error);
-			// 	};
-			// 	var successCallback = function (res) {
-			// 		let accessToken = res.data.access_token;
-			// 		let refreshToken = res.data.refresh_token;
-			// 		ExternalOAuthService.postUserExternalOAuthToken(accessToken, refreshToken, cleanExternalAuthCodeFromUrl, failCallback);
-			// 	};
-			// 	ExternalOAuthService.requestOwncloudAccessToken(authorizationCode, successCallback, failCallback);
-			// }
 		};
 
 	});
