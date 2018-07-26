@@ -6,20 +6,18 @@ angular.module('ArrebolServices').service(
 		var session = {};
 		session.user = {
 			name: undefined,
-			login: undefined,
-			pass: undefined,
 			token: undefined
 		};
 
 		if (window.sessionStorage.user) {
-			if (JSON.parse(window.sessionStorage.user).login !== undefined) {
+			if (JSON.parse(window.sessionStorage.user).name !== undefined) {
 				session.user = JSON.parse(window.sessionStorage.user);
 			}
 		} else {
 			window.sessionStorage.user = JSON.stringify(session.user);
 		}
 
-		if (JSON.parse(window.sessionStorage.user).login === undefined) {
+		if (JSON.parse(window.sessionStorage.user).name === undefined) {
 			window.sessionStorage.user = JSON.stringify(session.user);
 		} else {
 			session.user = JSON.parse(window.sessionStorage.user);
@@ -36,8 +34,6 @@ angular.module('ArrebolServices').service(
 		session.destroy = function () {
 			session.user = {
 				name: undefined,
-				login: undefined,
-				pass: undefined,
 				token: undefined
 			};
 			window.sessionStorage.user = JSON.stringify(session.user);
@@ -117,7 +113,7 @@ angular.module('ArrebolServices').service(
 				var user = Session.getUser();
 				var creds = {
 					username: user.name,
-					password: user.pass,
+					password: user.token,
 					nonce: nonce
 				};
 				$http.get(
@@ -140,7 +136,7 @@ angular.module('ArrebolServices').service(
 				var user = Session.getUser();
 				var creds = {
 					username: user.name,
-					password: user.pass,
+					password: user.token,
 					nonce: nonce
 				}
 				$http.get(
@@ -159,7 +155,7 @@ angular.module('ArrebolServices').service(
 				var user = Session.getUser();
 				var creds = {
 					username: user.name,
-					password: user.pass,
+					password: user.token,
 					nonce: nonce
 				};
 
@@ -194,7 +190,7 @@ angular.module('ArrebolServices').service(
 				var user = Session.getUser();
 				var creds = {
 					username: user.name,
-					password: user.pass,
+					password: user.token,
 					nonce: nonce
 				};
 

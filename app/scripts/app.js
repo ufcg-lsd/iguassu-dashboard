@@ -49,7 +49,7 @@ app.config(
   function ($routeProvider) {
 
     var checkUser = function ($location, AuthenticationService) {
-      if (!AuthenticationService.checkUser()) {
+    	if (!AuthenticationService.checkUser()) {
         $location.path("/");
       }
     };
