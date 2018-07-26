@@ -40,7 +40,8 @@ angular.module('ArrebolControllers').controller(
       let failCallBack = function (error) { //Erro call back
 	      if (error.status === 400) {
 		      let req = appConfig.owncloudServerUrl + "index.php/apps/oauth2/authorize" + "?response_type=code&" +
-			      "client_id=" + appConfig.owncloudClientId + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl;
+			      "client_id=" + appConfig.owncloudClientId + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl
+			      + "&user=" + $scope.username;
 		      $window.location.href = req;
 	      } else {
 		      console.log('Login error: ' + JSON.stringify(error));
@@ -71,6 +72,7 @@ angular.module('ArrebolControllers').controller(
 			  $scope.username = res.data.user_id;
 
 			  if ($scope.username !== undefined) {
+			  	// TODO: do not post if user just got authcode and posted to iguassu
 				  ExternalOAuthService.postUserExternalOAuthToken($scope.username, accessToken, refreshToken, doLoginSuccessCallBack, failCallback);
 			  }
 		  };

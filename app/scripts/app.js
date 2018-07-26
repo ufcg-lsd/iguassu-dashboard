@@ -55,10 +55,10 @@ app.config(
     };
 
     var alreadyLoggedIn = function ($location, AuthenticationService) {
-      if (AuthenticationService.checkUser()) {
+	    if (AuthenticationService.checkUser()) {
         $location.path("/tasks");
       }
-    }
+    };
 
     $routeProvider.when(
       '/',
