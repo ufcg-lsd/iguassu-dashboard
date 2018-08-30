@@ -30,11 +30,18 @@ angular.module('ArrebolServices', ['ngResource']);
 app.constant(
   'appConfig',
   {
-    host: 'http://localhost:44444',
-    userEndpoint: '/arrebol/user',
+    host: 'http://XX.XX.X.X:XXXX',
+
     jobEndpoint: '/job',
-    authenticatorEndpoint: '/arrebol/authenticator',
-    nonceEndpoint: '/arrebol/nonce'
+    nonceEndpoint: '/nonce',
+    oAuthEndpoint: '/oauthtoken/',
+
+	  iguassuServerHost: 'http://XXX.X.X.X:XXXX',
+
+    owncloudServerUrl: 'http://XXX.X.X.X:XX/',
+    owncloudClientId: '',
+		owncloudClientSecret: '',
+		owncloudClientRedirectUrl: 'http://XXX.X.X.X:XXXX/#!/'
   }
 );
 
@@ -42,16 +49,16 @@ app.config(
   function ($routeProvider) {
 
     var checkUser = function ($location, AuthenticationService) {
-      if (!AuthenticationService.checkUser()) {
+    	if (!AuthenticationService.checkUser()) {
         $location.path("/");
       }
     };
 
     var alreadyLoggedIn = function ($location, AuthenticationService) {
-      if (AuthenticationService.checkUser()) {
+	    if (AuthenticationService.checkUser()) {
         $location.path("/tasks");
       }
-    }
+    };
 
     $routeProvider.when(
       '/',

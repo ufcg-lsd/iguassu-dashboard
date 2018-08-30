@@ -46,7 +46,7 @@ angular.module('ArrebolApp')
     		});
     	},
     	getNonce: function(callback) {
-    		$http.get(arrebolConfig.arrebolServiceBaseUrl + this.nonceEndpoint)
+            $http.get(arrebolConfig.arrebolServiceBaseUrl + this.nonceEndpoint)
 	        .success(function(nonce) {
 	          callback(nonce);
 	        }).error(function (error) {
