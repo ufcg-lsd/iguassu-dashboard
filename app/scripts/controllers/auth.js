@@ -48,11 +48,18 @@ angular.module('ArrebolControllers').controller(
         }
       };
 
-	    AuthenticationService.signInWithOAuth($scope.username, doLoginSuccessCallBack, failCallBack);
+      AuthenticationService.signInWithOAuth($scope.owncloudUsername, doLoginSuccessCallBack, failCallBack);
+    };
+
+    $scope.doLoginWithCafe = function () {
+      if (Session.getUser().eduUsername) {
+        $location.path("/tasks");
+      }
+      $window.location.href = appConfig.nafAuthUrl;
     };
 
     $scope.getUsername = function () {
-      return AuthenticationService.getUsername();
+      return AuthenticationService.getUser().eduUsername;
     };
 
     $scope.doLogout = function () {
@@ -60,13 +67,18 @@ angular.module('ArrebolControllers').controller(
       $scope.owncloudUsername = undefined;
       $location.path('/');
     };
-
+  
+    $scope.goToAuthWithOwncloud = function () {
+      $location.path('/owncloud');
+    };
+    
 	  let authorizationCode = checkIfUrlHasAuthorizationCode();
 	  if (authorizationCode !== undefined) {
 		  var failCallback = function (error) {
 			  console.log(error);
 		  };
 		  var successCallback = function (res) {
+		    console.log("Request of token was sucessfull");
 			  let accessToken = res.data.access_token;
 			  let refreshToken = res.data.refresh_token;
 			  $scope.owncloudUsername = res.data.user_id;
