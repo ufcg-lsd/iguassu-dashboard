@@ -38,14 +38,14 @@ angular.module('ArrebolControllers').controller(
     $scope.doLogin = function () {
 
       let failCallBack = function (error) { //Erro call back
-	      if (error.status === 400) {
-		      let req = appConfig.owncloudServerUrl + "index.php/apps/oauth2/authorize" + "?response_type=code&" +
-			      "client_id=" + appConfig.owncloudClientId + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl
-			      + "&user=" + $scope.username;
-		      $window.location.href = req;
-	      } else {
-		      console.log('Login error: ' + JSON.stringify(error));
-	      }
+        if (error.status === 400) {
+          let req = appConfig.owncloudServerUrl + "index.php/apps/oauth2/authorize" + "?response_type=code&" +
+            "client_id=" + appConfig.owncloudClientId + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl +
+            "&user=" + $scope.owncloudUsername;
+          $window.location.href = req;
+        } else {
+          console.log('Login error: ' + JSON.stringify(error));
+        }
       };
 
 	    AuthenticationService.signInWithOAuth($scope.username, doLoginSuccessCallBack, failCallBack);
