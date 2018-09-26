@@ -6,7 +6,8 @@ angular.module('ArrebolServices').service(
 		var session = {};
 		session.user = {
 			name: undefined,
-			token: undefined
+		  	token: undefined,
+		  	eduUsername: undefined
 		};
 
 		if (window.sessionStorage.user) {
@@ -25,8 +26,9 @@ angular.module('ArrebolServices').service(
 
 		session.createTokenSession = function (userName, userToken) {
 			session.user = {
-				name: userName,
-				token: userToken
+				name: oldSession.name ? oldSession.name : userName,
+				eduUsername: oldSession.eduUsername,
+				token: oldSession.token ? oldSession.token : userToken
 			};
 			window.sessionStorage.user = JSON.stringify(session.user);
 		};
@@ -34,7 +36,8 @@ angular.module('ArrebolServices').service(
 		session.destroy = function () {
 			session.user = {
 				name: undefined,
-				token: undefined
+				token: undefined,
+        		eduUsername: undefined
 			};
 			window.sessionStorage.user = JSON.stringify(session.user);
 		};
@@ -42,6 +45,15 @@ angular.module('ArrebolServices').service(
 		session.getUser = function () {
 			return JSON.parse(window.sessionStorage.user);
 		};
+
+		session.setEduUsername = function (eduUsername) {
+			session.user = {
+				name: undefined,
+        		eduUsername: eduUsername,
+        		token: undefined
+      		};
+      		localStoreUser(session.user);
+    	};
 
 		return session;
 	}
@@ -112,7 +124,8 @@ angular.module('ArrebolServices').service(
 
 				var user = Session.getUser();
 				var creds = {
-					username: user.name,
+					// username: user.name, TODO
+					username: user.eduUsername,
 					password: user.token,
 					nonce: nonce
 				};
