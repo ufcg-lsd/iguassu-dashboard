@@ -10,27 +10,32 @@ angular.module('ArrebolServices').service(
 		  	eduUsername: undefined
 		};
 
-		if (window.sessionStorage.user) {
-			if (JSON.parse(window.sessionStorage.user).name !== undefined) {
-				session.user = JSON.parse(window.sessionStorage.user);
+		session.USER_COOKIE_KEY = "iguassu-user-cookie-key";
+		
+		function localStoreUser(user) {
+      		$window.localStorage.setItem(session.USER_COOKIE_KEY, JSON.stringify(user));
+    	}
+		
+		function getLocalStoredUser() {
+		  return JSON.parse($window.localStorage.getItem(session.USER_COOKIE_KEY));
+		}
+    
+		if (getLocalStoredUser()) {
+			if (getLocalStoredUser().eduUsername !== undefined) {
+				session.user = getLocalStoredUser();
 			}
 		} else {
-			window.sessionStorage.user = JSON.stringify(session.user);
-		}
-
-		if (JSON.parse(window.sessionStorage.user).name === undefined) {
-			window.sessionStorage.user = JSON.stringify(session.user);
-		} else {
-			session.user = JSON.parse(window.sessionStorage.user);
-		}
+		  localStoreUser(session.user);
+    	}
 
 		session.createTokenSession = function (userName, userToken) {
+			let oldSession = session.getUser();
 			session.user = {
 				name: oldSession.name ? oldSession.name : userName,
 				eduUsername: oldSession.eduUsername,
 				token: oldSession.token ? oldSession.token : userToken
 			};
-			window.sessionStorage.user = JSON.stringify(session.user);
+      		localStoreUser(session.user);
 		};
 
 		session.destroy = function () {
@@ -39,11 +44,11 @@ angular.module('ArrebolServices').service(
 				token: undefined,
         		eduUsername: undefined
 			};
-			window.sessionStorage.user = JSON.stringify(session.user);
+      		localStoreUser(session.user);
 		};
 
 		session.getUser = function () {
-			return JSON.parse(window.sessionStorage.user);
+			return getLocalStoredUser();
 		};
 
 		session.setEduUsername = function (eduUsername) {
