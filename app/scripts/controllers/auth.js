@@ -15,8 +15,8 @@ angular.module('ArrebolControllers').controller(
     $scope.password = undefined;
     $scope.authType = 'not-refreshed';
 	  $scope.userRecentlyGotOAuthToken = false;
-
-	  var checkIfUrlHasAuthorizationCode = function () {
+  
+    function checkIfUrlHasAuthorizationCode() {
 		  let currentUrl = $location.$$absUrl;
 		  let re = /code=[a-zA-Z0-9.]+(?=#!)/;
 		  let regexAns = re.exec(currentUrl);
@@ -25,17 +25,17 @@ angular.module('ArrebolControllers').controller(
 			  let authorizationCode = splittedRegexAns[1];
 			  return authorizationCode;
 		  }
-	  };
-
-	  var doLoginSuccessCallBack = function (res) {
+	  }
+  
+    function doLoginSuccessCallBack(res) {
 		  $scope.userRecentlyGotOAuthToken = true;
 		  let userToken = res.token ? res.token : res.data ? res.data.accessToken : null; // key is token when response comes
 		                                                          // from Iguassu but is accesToken when comes from OwnCloud
-		  Session.createTokenSession($scope.username, userToken);
-		  $location.path('/tasks');
-	  };
-
-    $scope.doLogin = function () {
+		  Session.createTokenSession($scope.owncloudUsername, userToken);
+      $location.url('/tasks');
+	  }
+	  
+    $scope.doOwncloudOAuth = function () {
 
       let failCallBack = function (error) { //Erro call back
         if (error.status === 400) {
