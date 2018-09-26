@@ -11,7 +11,7 @@ angular.module('ArrebolControllers').controller(
   'AuthCtrl',
   function ($rootScope, $scope, $location, $window, toastr, Session, AuthenticationService, ExternalOAuthService, appConfig) {
 
-    $scope.username = undefined;
+    $scope.owncloudUsername = undefined;
     $scope.password = undefined;
     $scope.authType = 'not-refreshed';
 	  $scope.userRecentlyGotOAuthToken = false;
@@ -57,7 +57,7 @@ angular.module('ArrebolControllers').controller(
 
     $scope.doLogout = function () {
       AuthenticationService.doLogout();
-      $scope.username = undefined;
+      $scope.owncloudUsername = undefined;
       $location.path('/');
     };
 
@@ -69,15 +69,15 @@ angular.module('ArrebolControllers').controller(
 		  var successCallback = function (res) {
 			  let accessToken = res.data.access_token;
 			  let refreshToken = res.data.refresh_token;
-			  $scope.username = res.data.user_id;
+			  $scope.owncloudUsername = res.data.user_id;
 
-			  if ($scope.username !== undefined) {
+			  if ($scope.owncloudUsername !== undefined) {
 			  	// TODO: do not post if user just got authcode and posted to iguassu
-				  ExternalOAuthService.postUserExternalOAuthToken($scope.username, accessToken, refreshToken, doLoginSuccessCallBack, failCallback);
+				  ExternalOAuthService.postUserExternalOAuthToken($scope.owncloudUsername, accessToken, refreshToken, doLoginSuccessCallBack, failCallback);
 			  }
 		  };
-
 		  ExternalOAuthService.requestOwncloudAccessToken(authorizationCode, successCallback, failCallback);
 	  }
+   
   }
 );
