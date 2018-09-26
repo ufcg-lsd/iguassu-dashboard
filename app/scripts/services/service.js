@@ -2,7 +2,7 @@
 
 angular.module('ArrebolServices').service(
 	'Session',
-	function () {
+	function ($window) {
 		var session = {};
 		session.user = {
 			name: undefined,
@@ -85,21 +85,43 @@ angular.module('ArrebolServices').service(
 
 angular.module('ArrebolServices').service(
 	'AuthenticationService',
-	function ($http, appConfig, NonceService, Session, ExternalOAuthService) {
+	function ($http, $location, appConfig, NonceService, Session, ExternalOAuthService) {
 		var authServ = {};
 
-		authServ.checkUser = function () {
-			var user = Session.getUser();
-			if (user.token === undefined) {
-				return false;
-			} else {
-				return true;
-			}
+		// authServ.checkUser = function () {
+		// 	var user = Session.getUser();
+		// 	if (user.token === undefined) {
+		// 		return false;
+		// 	} else {
+		// 		return true;
+		// 	}
+		// };
+		authServ.checkCAFeUser = function () {
+		  var user = Session.getUser();
+		  if (user.eduUsername === undefined) {
+			return false;
+		  } else {
+			return true;
+		  }
 		};
 
-		authServ.getUsername = function () {
-			var user = Session.getUser();
-			return user.name;
+		authServ.checkIfUrlHasCAFeEduUsername = function () {
+		  let currentUrl = $location.$$absUrl;
+		  let re = /eduPersonPrincipalName=[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/;
+		  let regexAns = re.exec(currentUrl);
+		  if (regexAns !== null && typeof regexAns[0] === "string") {
+			let splittedRegexAns = regexAns[0].split("=");
+			let eduUserEmail = splittedRegexAns[1];
+			let eduUserEmailSplitted = eduUserEmail.split("@");
+			let eduUsername = eduUserEmailSplitted[0];
+			Session.setEduUsername(eduUsername);
+			return eduUsername;
+		  }
+		};
+
+		authServ.getUser = function () {
+			return Session.getUser();
+			// return user.name;
 		};
 
 		authServ.doLogout = function () {
@@ -107,6 +129,10 @@ angular.module('ArrebolServices').service(
 		};
 
 		authServ.signInWithOAuth = function (userName, callbackSuccess, callbackError) {
+			ExternalOAuthService.getUserExternalOAuthToken(userName, callbackSuccess, callbackError);
+		};
+
+		authServ.signInWithCAFe = function (userName, callbackSuccess, callbackError) {
 			ExternalOAuthService.getUserExternalOAuthToken(userName, callbackSuccess, callbackError);
 		};
 
@@ -254,8 +280,8 @@ angular.module('ArrebolServices').service(
 		};
 
 		externalOAuthService.requestOwncloudAccessToken = function (authorizationCode, callbackSuccess, callbackError) {
-			let url = appConfig.owncloudServerUrl + "index.php/apps/oauth2/api/v1/token?"
-				+ "grant_type=authorization_code" + "&code=" + authorizationCode + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl;
+			let url = appConfig.owncloudServerUrl + "index.php/apps/oauth2/api/v1/token?" +
+				"grant_type=authorization_code" + "&code=" + authorizationCode + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl;
 			let headers = {
 				'Authorization': 'Basic ' + btoa(appConfig.owncloudClientId + ":" + appConfig.owncloudClientSecret)
 			};
@@ -265,7 +291,7 @@ angular.module('ArrebolServices').service(
 			}).then(
 				callbackSuccess,
 				callbackError
-			)
+			);
 		};
 
 		externalOAuthService.postUserExternalOAuthToken = function (userName, accessToken, refreshToken, successCallback, failCallback) {
@@ -283,7 +309,7 @@ angular.module('ArrebolServices').service(
 			}).then(
 				successCallback,
 				failCallback
-			)
+			);
 		};
 
 		return externalOAuthService;
