@@ -54,7 +54,7 @@ angular.module('ArrebolControllers').controller(
 			}
 		};
 
-		$scope.openSubmissionModal = async function () {
+		$scope.openSubmissionModal = function () {
 
 			var modalInstance = $uibModal.open(
 				{
@@ -68,7 +68,7 @@ angular.module('ArrebolControllers').controller(
 			modalInstance.result.then(
 				function (jobId) {
 					if (jobId) {
-						toastr.success('Job ' + jobId + ' submitted.')
+						toastr.success('Job ' + jobId + ' submitted.');
 					}
 					$scope.updateTaskList();
 				},
@@ -76,7 +76,7 @@ angular.module('ArrebolControllers').controller(
 					toastr.error(error);
 					$scope.updateTaskList();
 				}
-			)
+			);
 
 		};
 
@@ -114,6 +114,6 @@ angular.module('ArrebolControllers').controller(
 		$scope.closeModal = function () {
 			$scope.clearJDF();
 			$uibModalInstance.close(undefined);
-		}
+		};
 	}
 );
