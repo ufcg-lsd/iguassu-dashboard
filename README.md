@@ -21,6 +21,8 @@ npm install
 bower install
 ```
 
+Go to /app directory, make a copy of env.example.js, rename to env.example and set vars' value.
+
 Run `grunt` for building and `grunt serve` for preview.
 
 ## Testing

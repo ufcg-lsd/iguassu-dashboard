@@ -27,21 +27,25 @@ var app = angular.module(
 angular.module('ArrebolControllers', ['ngResource']);
 angular.module('ArrebolServices', ['ngResource']);
 
+// Import variables if present (from env.js)
+var env = {};
+if(window){
+    Object.assign(env, window.__env);
+}
+
 app.constant(
   'appConfig',
   {
-    host: 'http://XX.XX.X.X:XXXX',
-
-    jobEndpoint: '/job',
-    nonceEndpoint: '/nonce',
-    oAuthEndpoint: '/oauthtoken/',
-
-	  iguassuServerHost: 'http://XXX.X.X.X:XXXX',
-
-    owncloudServerUrl: 'http://XXX.X.X.X:XX/',
-    owncloudClientId: '',
-		owncloudClientSecret: '',
-		owncloudClientRedirectUrl: 'http://XXX.X.X.X:XXXX/#!/'
+    host: env.host,
+    jobEndpoint: env.host,
+    nonceEndpoint: env.jobEndpoint,
+    oAuthEndpoint: env.oAuthEndpoint,
+    iguassuServerHost: env.iguassuServerHost,
+    owncloudServerUrl: env.owncloudServerUrl,
+    owncloudClientId: env.owncloudClientId,
+    owncloudClientSecret: env.owncloudClientSecret,
+    owncloudClientRedirectUrl: env.owncloudClientRedirectUrl,
+    nafAuthUrl: env.nafAuthUrl
   }
 );
 
@@ -49,14 +53,21 @@ app.config(
   function ($routeProvider) {
 
     var checkUser = function ($location, AuthenticationService) {
-    	if (!AuthenticationService.checkUser()) {
+      if (!AuthenticationService.checkCAFeUser()) {
         $location.path("/");
       }
     };
 
     var alreadyLoggedIn = function ($location, AuthenticationService) {
-	    if (AuthenticationService.checkUser()) {
-        $location.path("/tasks");
+	    if (AuthenticationService.checkIfUrlHasCAFeEduUsername() || AuthenticationService.checkCAFeUser()) {
+        let user = AuthenticationService.getUser();
+        if (user.name) {
+          $location.url('/tasks');
+        } else {
+          $location.url("/owncloud");
+        }
+      } else {
+        $location.path("/");
       }
     };
 
@@ -74,7 +85,7 @@ app.config(
       {
         templateUrl: 'views/main.html',
         resolve: {
-          check: checkUser
+          check: alreadyLoggedIn
         },
         controller: 'MainCtrl'
       }
@@ -86,6 +97,15 @@ app.config(
           check: checkUser
         },
         controller: 'TasksCtrl'
+      }
+      ).when(
+      '/owncloud',
+      {
+        templateUrl: 'views/authowncloud.html',
+        resolve: {
+          check: alreadyLoggedIn
+        },
+        controller: 'AuthCtrl'
       }
       ).otherwise(
       {

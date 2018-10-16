@@ -2,46 +2,63 @@
 
 angular.module('ArrebolServices').service(
 	'Session',
-	function () {
+	function ($window) {
 		var session = {};
 		session.user = {
 			name: undefined,
-			token: undefined
+		  	token: undefined,
+		  	eduUsername: undefined
 		};
 
-		if (window.sessionStorage.user) {
-			if (JSON.parse(window.sessionStorage.user).name !== undefined) {
-				session.user = JSON.parse(window.sessionStorage.user);
+		session.USER_COOKIE_KEY = "iguassu-user-cookie-key";
+		
+		function localStoreUser(user) {
+      		$window.localStorage.setItem(session.USER_COOKIE_KEY, JSON.stringify(user));
+    	}
+		
+		function getLocalStoredUser() {
+		  return JSON.parse($window.localStorage.getItem(session.USER_COOKIE_KEY));
+		}
+    
+		if (getLocalStoredUser()) {
+			if (getLocalStoredUser().eduUsername !== undefined) {
+				session.user = getLocalStoredUser();
 			}
 		} else {
-			window.sessionStorage.user = JSON.stringify(session.user);
-		}
-
-		if (JSON.parse(window.sessionStorage.user).name === undefined) {
-			window.sessionStorage.user = JSON.stringify(session.user);
-		} else {
-			session.user = JSON.parse(window.sessionStorage.user);
-		}
+		  localStoreUser(session.user);
+    	}
 
 		session.createTokenSession = function (userName, userToken) {
+			let oldSession = session.getUser();
 			session.user = {
-				name: userName,
-				token: userToken
+				name: oldSession.name ? oldSession.name : userName,
+				eduUsername: oldSession.eduUsername,
+				token: oldSession.token ? oldSession.token : userToken
 			};
-			window.sessionStorage.user = JSON.stringify(session.user);
+      		localStoreUser(session.user);
 		};
 
 		session.destroy = function () {
 			session.user = {
 				name: undefined,
-				token: undefined
+				token: undefined,
+        		eduUsername: undefined
 			};
-			window.sessionStorage.user = JSON.stringify(session.user);
+      		localStoreUser(session.user);
 		};
 
 		session.getUser = function () {
-			return JSON.parse(window.sessionStorage.user);
+			return getLocalStoredUser();
 		};
+
+		session.setEduUsername = function (eduUsername) {
+			session.user = {
+				name: undefined,
+        		eduUsername: eduUsername,
+        		token: undefined
+      		};
+      		localStoreUser(session.user);
+    	};
 
 		return session;
 	}
@@ -68,21 +85,43 @@ angular.module('ArrebolServices').service(
 
 angular.module('ArrebolServices').service(
 	'AuthenticationService',
-	function ($http, appConfig, NonceService, Session, ExternalOAuthService) {
+	function ($http, $location, appConfig, NonceService, Session, ExternalOAuthService) {
 		var authServ = {};
 
-		authServ.checkUser = function () {
-			var user = Session.getUser();
-			if (user.token === undefined) {
-				return false;
-			} else {
-				return true;
-			}
+		// authServ.checkUser = function () {
+		// 	var user = Session.getUser();
+		// 	if (user.token === undefined) {
+		// 		return false;
+		// 	} else {
+		// 		return true;
+		// 	}
+		// };
+		authServ.checkCAFeUser = function () {
+		  var user = Session.getUser();
+		  if (user.eduUsername === undefined) {
+			return false;
+		  } else {
+			return true;
+		  }
 		};
 
-		authServ.getUsername = function () {
-			var user = Session.getUser();
-			return user.name;
+		authServ.checkIfUrlHasCAFeEduUsername = function () {
+		  let currentUrl = $location.$$absUrl;
+		  let re = /eduPersonPrincipalName=[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/;
+		  let regexAns = re.exec(currentUrl);
+		  if (regexAns !== null && typeof regexAns[0] === "string") {
+			let splittedRegexAns = regexAns[0].split("=");
+			let eduUserEmail = splittedRegexAns[1];
+			let eduUserEmailSplitted = eduUserEmail.split("@");
+			let eduUsername = eduUserEmailSplitted[0];
+			Session.setEduUsername(eduUsername);
+			return eduUsername;
+		  }
+		};
+
+		authServ.getUser = function () {
+			return Session.getUser();
+			// return user.name;
 		};
 
 		authServ.doLogout = function () {
@@ -90,6 +129,10 @@ angular.module('ArrebolServices').service(
 		};
 
 		authServ.signInWithOAuth = function (userName, callbackSuccess, callbackError) {
+			ExternalOAuthService.getUserExternalOAuthToken(userName, callbackSuccess, callbackError);
+		};
+
+		authServ.signInWithCAFe = function (userName, callbackSuccess, callbackError) {
 			ExternalOAuthService.getUserExternalOAuthToken(userName, callbackSuccess, callbackError);
 		};
 
@@ -112,7 +155,8 @@ angular.module('ArrebolServices').service(
 
 				var user = Session.getUser();
 				var creds = {
-					username: user.name,
+					// username: user.name, TODO
+					username: user.eduUsername,
 					password: user.token,
 					nonce: nonce
 				};
@@ -236,8 +280,8 @@ angular.module('ArrebolServices').service(
 		};
 
 		externalOAuthService.requestOwncloudAccessToken = function (authorizationCode, callbackSuccess, callbackError) {
-			let url = appConfig.owncloudServerUrl + "index.php/apps/oauth2/api/v1/token?"
-				+ "grant_type=authorization_code" + "&code=" + authorizationCode + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl;
+			let url = appConfig.owncloudServerUrl + "index.php/apps/oauth2/api/v1/token?" +
+				"grant_type=authorization_code" + "&code=" + authorizationCode + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl;
 			let headers = {
 				'Authorization': 'Basic ' + btoa(appConfig.owncloudClientId + ":" + appConfig.owncloudClientSecret)
 			};
@@ -247,7 +291,7 @@ angular.module('ArrebolServices').service(
 			}).then(
 				callbackSuccess,
 				callbackError
-			)
+			);
 		};
 
 		externalOAuthService.postUserExternalOAuthToken = function (userName, accessToken, refreshToken, successCallback, failCallback) {
@@ -265,7 +309,7 @@ angular.module('ArrebolServices').service(
 			}).then(
 				successCallback,
 				failCallback
-			)
+			);
 		};
 
 		return externalOAuthService;
