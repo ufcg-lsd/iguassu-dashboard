@@ -33,10 +33,6 @@ if(window){
     Object.assign(env, window.__env);
 }
 
-console.log("oi");
-console.log(env);
-console.log(env.jobEndpoint);
-
 app.constant(
   'appConfig',
   {
