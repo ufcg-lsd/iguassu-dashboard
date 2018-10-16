@@ -27,21 +27,29 @@ var app = angular.module(
 angular.module('ArrebolControllers', ['ngResource']);
 angular.module('ArrebolServices', ['ngResource']);
 
+// Import variables if present (from env.js)
+var env = {};
+if(window){
+    Object.assign(env, window.__env);
+}
+
+console.log("oi");
+console.log(env);
+console.log(env.jobEndpoint);
+
 app.constant(
   'appConfig',
   {
-    host: 'http://XX.XX.X.X:XXXX',
-
-    jobEndpoint: '/job',
-    nonceEndpoint: '/nonce',
-    oAuthEndpoint: '/oauthtoken/',
-
-	  iguassuServerHost: 'http://XXX.X.X.X:XXXX',
-
-    owncloudServerUrl: 'http://XXX.X.X.X:XX/',
-    owncloudClientId: '',
-		owncloudClientSecret: '',
-		owncloudClientRedirectUrl: 'http://XXX.X.X.X:XXXX/#!/'
+    host: env.host,
+    jobEndpoint: env.host,
+    nonceEndpoint: env.jobEndpoint,
+    oAuthEndpoint: env.oAuthEndpoint,
+    iguassuServerHost: env.iguassuServerHost,
+    owncloudServerUrl: env.owncloudServerUrl,
+    owncloudClientId: env.owncloudClientId,
+    owncloudClientSecret: env.owncloudClientSecret,
+    owncloudClientRedirectUrl: env.owncloudClientRedirectUrl,
+    nafAuthUrl: env.nafAuthUrl
   }
 );
 
