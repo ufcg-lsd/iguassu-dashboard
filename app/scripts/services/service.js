@@ -1,317 +1,352 @@
-'use strict';
+"use strict";
 
-angular.module('ArrebolServices').service(
-	'Session',
-	function ($window) {
-		var session = {};
-		session.user = {
-			name: undefined,
-		  	token: undefined,
-		  	eduUsername: undefined
-		};
+angular.module("ArrebolServices").service("Session", function($window) {
+  var session = {};
+  session.user = {
+    name: undefined,
+    token: undefined,
+    eduUsername: undefined
+  };
 
-		session.USER_COOKIE_KEY = "iguassu-user-cookie-key";
-		
-		function localStoreUser(user) {
-      		$window.localStorage.setItem(session.USER_COOKIE_KEY, JSON.stringify(user));
-    	}
-		
-		function getLocalStoredUser() {
-		  return JSON.parse($window.localStorage.getItem(session.USER_COOKIE_KEY));
-		}
-    
-		if (getLocalStoredUser()) {
-			if (getLocalStoredUser().eduUsername !== undefined) {
-				session.user = getLocalStoredUser();
-			}
-		} else {
-		  localStoreUser(session.user);
-    	}
+  session.USER_COOKIE_KEY = "iguassu-user-cookie-key";
 
-		session.createTokenSession = function (userName, userToken) {
-			let oldSession = session.getUser();
-			session.user = {
-				name: oldSession.name ? oldSession.name : userName,
-				eduUsername: oldSession.eduUsername,
-				token: oldSession.token ? oldSession.token : userToken
-			};
-      		localStoreUser(session.user);
-		};
+  function localStoreUser(user) {
+    $window.localStorage.setItem(session.USER_COOKIE_KEY, JSON.stringify(user));
+  }
 
-		session.destroy = function () {
-			session.user = {
-				name: undefined,
-				token: undefined,
-        		eduUsername: undefined
-			};
-      		localStoreUser(session.user);
-		};
+  function getLocalStoredUser() {
+    return JSON.parse($window.localStorage.getItem(session.USER_COOKIE_KEY));
+  }
 
-		session.getUser = function () {
-			return getLocalStoredUser();
-		};
+  if (getLocalStoredUser()) {
+    if (getLocalStoredUser().eduUsername !== undefined) {
+      session.user = getLocalStoredUser();
+    }
+  } else {
+    localStoreUser(session.user);
+  }
 
-		session.setEduUsername = function (eduUsername) {
-			session.user = {
-				name: undefined,
-        		eduUsername: eduUsername,
-        		token: undefined
-      		};
-      		localStoreUser(session.user);
-    	};
+  session.createTokenSession = function(userName, userToken) {
+    var oldSession = session.getUser();
+    session.user = {
+      name: oldSession.name ? oldSession.name : userName,
+      eduUsername: oldSession.eduUsername,
+      token: oldSession.token ? oldSession.token : userToken
+    };
+    localStoreUser(session.user);
+  };
 
-		return session;
-	}
-);
+  session.destroy = function() {
+    session.user = {
+      name: undefined,
+      token: undefined,
+      eduUsername: undefined
+    };
+    localStoreUser(session.user);
+  };
 
-angular.module('ArrebolServices').service(
-	'NonceService',
-	function ($http, appConfig) {
-		var nonceServ = {};
-		var resourceNonceUrl = appConfig.iguassuServerHost + appConfig.nonceEndpoint;
+  session.getUser = function() {
+    return getLocalStoredUser();
+  };
 
-		nonceServ.getNonce = function (callbackSuccess, callbackError) {
-			var successCallback = function (response) {
-				callbackSuccess(response.data);
-			};
-			$http
-				.get(resourceNonceUrl)
-				.then(successCallback, callbackError);
-		};
+  session.setEduUsername = function(eduUsername) {
+    session.user = {
+      name: undefined,
+      eduUsername: eduUsername,
+      token: undefined
+    };
+    localStoreUser(session.user);
+  };
 
-		return nonceServ;
-	}
-);
+  return session;
+});
 
-angular.module('ArrebolServices').service(
-	'AuthenticationService',
-	function ($http, $location, appConfig, NonceService, Session, ExternalOAuthService) {
-		var authServ = {};
+angular
+  .module("ArrebolServices")
+  .service("NonceService", function($http, appConfig) {
+    var nonceServ = {};
+    var resourceNonceUrl =
+      appConfig.iguassuServerHost + appConfig.nonceEndpoint;
 
-		// authServ.checkUser = function () {
-		// 	var user = Session.getUser();
-		// 	if (user.token === undefined) {
-		// 		return false;
-		// 	} else {
-		// 		return true;
-		// 	}
-		// };
-		authServ.checkCAFeUser = function () {
-		  var user = Session.getUser();
-		  if (user.eduUsername === undefined) {
-			return false;
-		  } else {
-			return true;
-		  }
-		};
+    nonceServ.getNonce = function(callbackSuccess, callbackError) {
+      var successCallback = function(response) {
+        callbackSuccess(response.data);
+      };
+      $http.get(resourceNonceUrl).then(successCallback, callbackError);
+    };
 
-		authServ.checkIfUrlHasCAFeEduUsername = function () {
-		  let currentUrl = $location.$$absUrl;
-		  let re = /eduPersonPrincipalName=[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/;
-		  let regexAns = re.exec(currentUrl);
-		  if (regexAns !== null && typeof regexAns[0] === "string") {
-			let splittedRegexAns = regexAns[0].split("=");
-			let eduUserEmail = splittedRegexAns[1];
-			let eduUserEmailSplitted = eduUserEmail.split("@");
-			let eduUsername = eduUserEmailSplitted[0];
-			Session.setEduUsername(eduUsername);
-			return eduUsername;
-		  }
-		};
+    return nonceServ;
+  });
 
-		authServ.getUser = function () {
-			return Session.getUser();
-			// return user.name;
-		};
+angular
+  .module("ArrebolServices")
+  .service("AuthenticationService", function(
+    $http,
+    $location,
+    appConfig,
+    NonceService,
+    Session,
+    ExternalOAuthService
+  ) {
+    var authServ = {};
 
-		authServ.doLogout = function () {
-			Session.destroy();
-		};
+    // authServ.checkUser = function () {
+    // 	var user = Session.getUser();
+    // 	if (user.token === undefined) {
+    // 		return false;
+    // 	} else {
+    // 		return true;
+    // 	}
+    // };
+    authServ.checkCAFeUser = function() {
+      var user = Session.getUser();
+      if (user.eduUsername === undefined) {
+        return false;
+      } else {
+        return true;
+      }
+    };
 
-		authServ.signInWithOAuth = function (userName, callbackSuccess, callbackError) {
-			ExternalOAuthService.getUserExternalOAuthToken(userName, callbackSuccess, callbackError);
-		};
+    authServ.checkIfUrlHasCAFeEduUsername = function() {
+      var currentUrl = $location.$$absUrl;
+      var re = /eduPersonPrincipalName=[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/;
+      var regexAns = re.exec(currentUrl);
+      if (regexAns !== null && typeof regexAns[0] === "string") {
+        var splittedRegexAns = regexAns[0].split("=");
+        var eduUserEmail = splittedRegexAns[1];
+        var eduUserEmailSplitted = eduUserEmail.split("@");
+        var eduUsername = eduUserEmailSplitted[0];
+        Session.setEduUsername(eduUsername);
+        return eduUsername;
+      }
+    };
 
-		authServ.signInWithCAFe = function (userName, callbackSuccess, callbackError) {
-			ExternalOAuthService.getUserExternalOAuthToken(userName, callbackSuccess, callbackError);
-		};
+    authServ.getUser = function() {
+      return Session.getUser();
+      // return user.name;
+    };
 
-		return authServ;
-	}
-);
+    authServ.doLogout = function() {
+      Session.destroy();
+    };
 
-angular.module('ArrebolServices').service(
-	'TasksService',
-	function ($http, appConfig, NonceService, Session) {
-		var tasksService = {};
+    authServ.signInWithOAuth = function(
+      userName,
+      callbackSuccess,
+      callbackError
+    ) {
+      ExternalOAuthService.getUserExternalOAuthToken(
+        userName,
+        callbackSuccess,
+        callbackError
+      );
+    };
 
-		var resourceJobUrl = appConfig.iguassuServerHost + appConfig.jobEndpoint;
+    authServ.signInWithCAFe = function(
+      userName,
+      callbackSuccess,
+      callbackError
+    ) {
+      ExternalOAuthService.getUserExternalOAuthToken(
+        userName,
+        callbackSuccess,
+        callbackError
+      );
+    };
 
-		tasksService.getTasksList = function (callbackSuccess, callbackError) {
-			var nonceCallback = function (nonce) {
-				var successCallback = function (response) {
-					callbackSuccess(response.data);
-				};
+    return authServ;
+  });
 
-				var user = Session.getUser();
-				var creds = {
-					// username: user.name, TODO
-					username: user.eduUsername,
-					password: user.token,
-					nonce: nonce
-				};
-				$http.get(
-					resourceJobUrl,
-					{headers: {'X-auth-credentials': JSON.stringify(creds)}}
-				).then(
-					successCallback,
-					callbackError
-				);
-			};
-			NonceService.getNonce(nonceCallback, callbackError);
-		};
+angular
+  .module("ArrebolServices")
+  .service("TasksService", function($http, appConfig, NonceService, Session) {
+    var tasksService = {};
 
-		tasksService.getTask = function (jobId, callbackSuccess, callbackError) {
-			var nonceCallback = function (nonce) {
-				var successCallback = function (response) {
-					callbackSuccess(response.data);
-				};
+    var resourceJobUrl = appConfig.iguassuServerHost + appConfig.jobEndpoint;
 
-				var user = Session.getUser();
-				var creds = {
-					username: user.name,
-					password: user.token,
-					nonce: nonce
-				}
-				$http.get(
-					resourceJobUrl + '/' + jobId,
-					{headers: {'X-auth-credentials': JSON.stringify(creds)}}
-				).then(
-					successCallback,
-					callbackError
-				);
-			};
-			NonceService.getNonce(nonceCallback, callbackError);
-		};
+    tasksService.getTasksList = function(callbackSuccess, callbackError) {
+      var nonceCallback = function(nonce) {
+        var successCallback = function(response) {
+          callbackSuccess(response.data);
+        };
 
-		tasksService.postJob = function (jdffile, callbackSuccess, callbackError) {
-			var nonceCallback = function (nonce) {
-				var user = Session.getUser();
-				var creds = {
-					username: user.name,
-					password: user.token,
-					nonce: nonce
-				};
+        var user = Session.getUser();
+        var creds = {
+          // username: user.name, TODO
+          username: user.eduUsername,
+          password: user.token,
+          nonce: nonce
+        };
+        $http
+          .get(resourceJobUrl, {
+            headers: { "X-auth-credentials": JSON.stringify(creds) }
+          })
+          .then(successCallback, callbackError);
+      };
+      NonceService.getNonce(nonceCallback, callbackError);
+    };
 
-				var form = new FormData();
-				form.append('jdffilepath', jdffile);
-				form.append('X-auth-credentials', angular.toJson(creds));
+    tasksService.getTask = function(jobId, callbackSuccess, callbackError) {
+      var nonceCallback = function(nonce) {
+        var successCallback = function(response) {
+          callbackSuccess(response.data);
+        };
 
-				$http.post(
-					resourceJobUrl,
-					form,
-					{
-						transformRequest: angular.identity,
-						transformResponse: function myTransformFn(data, headersGetter, status) {
-							return JSON.stringify(data);
-						},
-						headers: {
-							'X-auth-credentials': JSON.stringify(creds),
-							'Accept': 'application/json',
-							'Content-Type': undefined
-						}
-					}
-				).then(
-					callbackSuccess,
-					callbackError
-				);
-			};
-			NonceService.getNonce(nonceCallback, callbackError);
-		};
+        var user = Session.getUser();
+        var creds = {
+          username: user.name,
+          password: user.token,
+          nonce: nonce
+        };
+        $http
+          .get(resourceJobUrl + "/" + jobId, {
+            headers: { "X-auth-credentials": JSON.stringify(creds) }
+          })
+          .then(successCallback, callbackError);
+      };
+      NonceService.getNonce(nonceCallback, callbackError);
+    };
 
-		tasksService.deleteJob = function (jobId, callbackSuccess, callbackError) {
-			var nonceCallback = function (nonce) {
-				var user = Session.getUser();
-				var creds = {
-					username: user.name,
-					password: user.token,
-					nonce: nonce
-				};
+    tasksService.postJob = function(jdffile, callbackSuccess, callbackError) {
+      var nonceCallback = function(nonce) {
+        var user = Session.getUser();
+        var creds = {
+          username: user.name,
+          password: user.token,
+          nonce: nonce
+        };
 
-				$http.delete(
-					resourceJobUrl + '/' + jobId,
-					{
-						headers: {
-							'X-auth-credentials': JSON.stringify(creds)
-						}
-					}
-				).then(
-					function (response) {
-						callbackSuccess(response.data);
-					},
-					callbackError
-				);
-			};
-			NonceService.getNonce(nonceCallback, callbackError);
-		};
+        var form = new FormData();
+        form.append("jdffilepath", jdffile);
+        form.append("X-auth-credentials", angular.toJson(creds));
 
-		return tasksService;
-	}
-);
+        $http
+          .post(resourceJobUrl, form, {
+            transformRequest: angular.identity,
+            transformResponse: function myTransformFn(
+              data,
+              headersGetter,
+              status
+            ) {
+              return JSON.stringify(data);
+            },
+            headers: {
+              "X-auth-credentials": JSON.stringify(creds),
+              Accept: "application/json",
+              "Content-Type": undefined
+            }
+          })
+          .then(callbackSuccess, callbackError);
+      };
+      NonceService.getNonce(nonceCallback, callbackError);
+    };
 
-angular.module('ArrebolServices').service(
-	'ExternalOAuthService',
-	function ($http, appConfig, NonceService, Session) {
-		var externalOAuthService = {};
+    tasksService.deleteJob = function(jobId, callbackSuccess, callbackError) {
+      var nonceCallback = function(nonce) {
+        var user = Session.getUser();
+        var creds = {
+          username: user.name,
+          password: user.token,
+          nonce: nonce
+        };
 
-		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
+        $http
+          .delete(resourceJobUrl + "/" + jobId, {
+            headers: {
+              "X-auth-credentials": JSON.stringify(creds)
+            }
+          })
+          .then(function(response) {
+            callbackSuccess(response.data);
+          }, callbackError);
+      };
+      NonceService.getNonce(nonceCallback, callbackError);
+    };
 
-		externalOAuthService.getUserExternalOAuthToken = function (userName, callbackSuccess, callbackError) {
-			var successCallback = function (response) {
-				callbackSuccess(response.data);
-			};
+    return tasksService;
+  });
 
-			$http.get(
-				externalOAuthTokenUrl + '/' + userName
-			).then(
-				successCallback,
-				callbackError
-			);
-		};
+angular
+  .module("ArrebolServices")
+  .service("ExternalOAuthService", function(
+    $http,
+    appConfig,
+    NonceService,
+    Session
+  ) {
+    var externalOAuthService = {};
 
-		externalOAuthService.requestOwncloudAccessToken = function (authorizationCode, callbackSuccess, callbackError) {
-			let url = appConfig.owncloudServerUrl + "index.php/apps/oauth2/api/v1/token?" +
-				"grant_type=authorization_code" + "&code=" + authorizationCode + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl;
-			let headers = {
-				'Authorization': 'Basic ' + btoa(appConfig.owncloudClientId + ":" + appConfig.owncloudClientSecret)
-			};
+    var externalOAuthTokenUrl =
+      appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
 
-			$http.post(url, {}, {
-				headers: headers
-			}).then(
-				callbackSuccess,
-				callbackError
-			);
-		};
+    externalOAuthService.getUserExternalOAuthToken = function(
+      userName,
+      callbackSuccess,
+      callbackError
+    ) {
+      var successCallback = function(response) {
+        callbackSuccess(response.data);
+      };
 
-		externalOAuthService.postUserExternalOAuthToken = function (userName, accessToken, refreshToken, successCallback, failCallback) {
-			let oneHourInSeconds = "3600";
-			let data = {
-				accessToken: accessToken,
-				refreshToken: refreshToken,
-				usernameOwner: userName,
-				expirationDate: oneHourInSeconds
-			};
-			let headers = {};
+      $http
+        .get(externalOAuthTokenUrl + "/" + userName)
+        .then(successCallback, callbackError);
+    };
 
-			$http.post(externalOAuthTokenUrl, data, {
-				headers: headers
-			}).then(
-				successCallback,
-				failCallback
-			);
-		};
+    externalOAuthService.requestOwncloudAccessToken = function(
+      authorizationCode,
+      callbackSuccess,
+      callbackError
+    ) {
+      var url =
+        appConfig.owncloudServerUrl +
+        "index.php/apps/oauth2/api/v1/token?" +
+        "grant_type=authorization_code" +
+        "&code=" +
+        authorizationCode +
+        "&redirect_uri=" +
+        appConfig.owncloudClientRedirectUrl;
+      var headers = {
+        Authorization:
+          "Basic " +
+          btoa(
+            appConfig.owncloudClientId + ":" + appConfig.owncloudClientSecret
+          )
+      };
 
-		return externalOAuthService;
-	}
-);
+      $http
+        .post(
+          url,
+          {},
+          {
+            headers: headers
+          }
+        )
+        .then(callbackSuccess, callbackError);
+    };
+
+    externalOAuthService.postUserExternalOAuthToken = function(
+      userName,
+      accessToken,
+      refreshToken,
+      successCallback,
+      failCallback
+    ) {
+      var oneHourInSeconds = "3600";
+      var data = {
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        usernameOwner: userName,
+        expirationDate: oneHourInSeconds
+      };
+      var headers = {};
+
+      $http
+        .post(externalOAuthTokenUrl, data, {
+          headers: headers
+        })
+        .then(successCallback, failCallback);
+    };
+
+    return externalOAuthService;
+  });
