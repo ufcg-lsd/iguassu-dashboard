@@ -37,8 +37,8 @@ app.constant(
   'appConfig',
   {
     host: env.host,
-    jobEndpoint: env.host,
-    nonceEndpoint: env.jobEndpoint,
+    jobEndpoint: env.jobEndpoint,
+    nonceEndpoint: env.nonceEndpoint,
     oAuthEndpoint: env.oAuthEndpoint,
     iguassuServerHost: env.iguassuServerHost,
     owncloudServerUrl: env.owncloudServerUrl,
