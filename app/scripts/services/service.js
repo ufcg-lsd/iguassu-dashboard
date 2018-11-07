@@ -182,7 +182,7 @@ angular.module('ArrebolServices').service(
 					username: user.name,
 					password: user.token,
 					nonce: nonce
-				}
+				};
 				$http.get(
 					resourceJobUrl + '/' + jobId,
 					{headers: {'X-auth-credentials': JSON.stringify(creds)}}
