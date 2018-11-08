@@ -191,7 +191,9 @@ angular.module('ArrebolServices').service(
 					callbackError
 				);
 			};
-			NonceService.getNonce(nonceCallback, callbackError);
+			if (jobId !== undefined) {
+				NonceService.getNonce(nonceCallback, callbackError);
+			}
 		};
 
 		tasksService.postJob = function (jdffile, callbackSuccess, callbackError) {
