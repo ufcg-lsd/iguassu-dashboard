@@ -267,18 +267,7 @@ angular.module('ArrebolServices').service(
 		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
 
 		externalOAuthService.getUserExternalOAuthToken = function (userName, callbackSuccess, callbackError) {
-			// var successCallback = function (response) {
-			// 	callbackSuccess(response.data);
-			// };
-			//
-			// $http.get(
-			// 	externalOAuthTokenUrl + '/' + userName
-			// ).then(
-			// 	successCallback,
-			// 	callbackError
-			// );
 			var user = Session.getUser();
-			console.log(user);
 			if (user.token) {
                 callbackSuccess(user.token);
 			} else {
