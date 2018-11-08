@@ -38,7 +38,7 @@ angular.module('ArrebolControllers').controller(
     var showsTasks = function () {
         $scope.getTask($routeParams.job);
 
-        const INTERVAL_5_SECONDS = 5000;
+        const INTERVAL_5_SECONDS = 10000;
         setInterval(() =>
             $scope.getTask($routeParams.job),
             INTERVAL_5_SECONDS
