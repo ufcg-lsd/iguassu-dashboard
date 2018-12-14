@@ -58,7 +58,7 @@ angular
         if (error.status === 400) {
           var req =
             appConfig.owncloudServerUrl +
-            "index.php/apps/oauth2/authorize" +
+            "/index.php/apps/oauth2/authorize" +
             "?response_type=code&" +
             "client_id=" +
             appConfig.owncloudClientId +

@@ -20,21 +20,21 @@ angular.module('ArrebolServices').service(
 		  return JSON.parse($window.localStorage.getItem(session.USER_COOKIE_KEY));
 		}
     
-		if (getLocalStoredUser()) {
-			if (getLocalStoredUser().eduUsername !== undefined) {
+		if (getLocalStoredUser()) {			
+			if (getLocalStoredUser().eduUsername !== undefined) {				
 				session.user = getLocalStoredUser();
 			}
-		} else {
+		} else {			
 		  localStoreUser(session.user);
     	}
 
-		session.createTokenSession = function (userName, userToken) {
-			let oldSession = session.getUser();
+		session.createTokenSession = function (userName, userToken) {			
+			let oldSession = session.getUser();			
 			session.user = {
 				name: oldSession.name ? oldSession.name : userName,
 				eduUsername: oldSession.eduUsername,
 				token: oldSession.token ? oldSession.token : userToken
-			};
+			};			
       		localStoreUser(session.user);
 		};
 
@@ -279,7 +279,7 @@ angular.module('ArrebolServices').service(
 		};
 
 		externalOAuthService.requestOwncloudAccessToken = function (authorizationCode, callbackSuccess, callbackError) {
-			let url = appConfig.owncloudServerUrl + "index.php/apps/oauth2/api/v1/token?" +
+			let url = appConfig.owncloudServerUrl + "/index.php/apps/oauth2/api/v1/token?" +
 				"grant_type=authorization_code" + "&code=" + authorizationCode + "&redirect_uri=" + appConfig.owncloudClientRedirectUrl;
 			let headers = {
 				'Authorization': 'Basic ' + btoa(appConfig.owncloudClientId + ":" + appConfig.owncloudClientSecret)

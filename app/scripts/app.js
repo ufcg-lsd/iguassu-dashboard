@@ -59,7 +59,7 @@ app.config(function($routeProvider) {
       AuthenticationService.checkCAFeUser()
     ) {
       var user = AuthenticationService.getUser();
-      if (user.name) {
+      if (user.name) { // if null, user has not authenticated on owncloud
         $location.url("/tasks");
       } else {
         $location.url("/owncloud");
