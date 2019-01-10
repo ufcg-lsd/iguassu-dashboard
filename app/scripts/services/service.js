@@ -58,8 +58,8 @@ angular.module('ArrebolServices').service(
         		token: undefined
       		};
       		localStoreUser(session.user);
-    	};
-
+		};
+		
 		return session;
 	}
 );
@@ -88,18 +88,10 @@ angular.module('ArrebolServices').service(
 	function ($http, $location, appConfig, NonceService, Session, ExternalOAuthService) {
 		var authServ = {};
 
-		// authServ.checkUser = function () {
-		// 	var user = Session.getUser();
-		// 	if (user.token === undefined) {
-		// 		return false;
-		// 	} else {
-		// 		return true;
-		// 	}
-		// };
 		authServ.checkCAFeUser = function () {
 		  var user = Session.getUser();
 		  if (user.eduUsername === undefined) {
-			return false;
+			return true; // Set this to false when CAFe turns
 		  } else {
 			return true;
 		  }
@@ -154,10 +146,9 @@ angular.module('ArrebolServices').service(
 				};
 
 				var user = Session.getUser();
-				var creds = {
-					// username: user.name, TODO
-					username: user.eduUsername,
-					password: user.token,
+				var creds = {					
+					username: user.name, // Change this to eduUsername
+					token: user.token,
 					nonce: nonce
 				};
 				$http.get(
@@ -180,12 +171,12 @@ angular.module('ArrebolServices').service(
 				var user = Session.getUser();
 				var creds = {
 					username: user.name,
-					password: user.token,
+					token: user.token,
 					nonce: nonce
 				};
 				$http.get(
 					resourceJobUrl + '/' + jobId,
-					{headers: {'X-auth-credentials': JSON.stringify(creds)}}
+					{ headers: {'X-auth-credentials': JSON.stringify(creds)} }
 				).then(
 					successCallback,
 					callbackError
@@ -201,7 +192,7 @@ angular.module('ArrebolServices').service(
 				var user = Session.getUser();
 				var creds = {
 					username: user.name,
-					password: user.token,
+					token: user.token,
 					nonce: nonce
 				};
 
@@ -236,7 +227,7 @@ angular.module('ArrebolServices').service(
 				var user = Session.getUser();
 				var creds = {
 					username: user.name,
-					password: user.token,
+					token: user.token,
 					nonce: nonce
 				};
 
