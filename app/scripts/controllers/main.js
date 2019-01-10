@@ -77,9 +77,7 @@ angular.module('ArrebolControllers').controller(
 					$scope.updateTaskList();
 				}
 			);
-
 		};
-
 	});
 
 angular.module('ArrebolControllers').controller(
