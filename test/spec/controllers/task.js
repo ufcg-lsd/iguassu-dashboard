@@ -3,7 +3,7 @@
 describe('Controller: TaskCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('ArrebolApp'));
+  beforeEach(module('IguassuApp'));
 
   var TaskCtrl,
     scope;

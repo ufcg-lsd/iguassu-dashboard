@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name ArrebolApp.controller:MainCtrl
+ * @name IguassuApp.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the ArrebolApp
+ * Controller of the IguassuApp
  */
-angular.module('ArrebolControllers').controller(
+angular.module('IguassuControllers').controller(
 	'MainCtrl',
 	function ($rootScope, $scope, $uibModal, $location, toastr, TasksService, ExternalOAuthService, $window) {
 
@@ -80,7 +80,7 @@ angular.module('ArrebolControllers').controller(
 		};
 	});
 
-angular.module('ArrebolControllers').controller(
+angular.module('IguassuControllers').controller(
 	'SubmissionModalCtrl',
 	function ($scope, $uibModalInstance, TasksService) {
 		$scope.jdffile = undefined;

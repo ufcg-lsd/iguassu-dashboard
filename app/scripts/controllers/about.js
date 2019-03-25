@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name ArrebolApp.controller:AboutCtrl
+ * @name IguassuApp.controller:AboutCtrl
  * @description
  * # AboutCtrl
- * Controller of the ArrebolApp
+ * Controller of the IguassuApp
  */
-angular.module('ArrebolControllers').controller(
+angular.module('IguassuControllers').controller(
   'AboutCtrl',
   function () {
     this.awesomeThings = [
