@@ -2,15 +2,15 @@
 
 /**
  * @ngdoc overview
- * @name ArrebolApp
+ * @name IguassuApp
  * @description
- * # ArrebolApp
+ * # IguassuApp
  *
  * Main module of the application.
  */
-var app = angular.module("ArrebolApp", [
-  "ArrebolControllers",
-  "ArrebolServices",
+var app = angular.module("IguassuApp", [
+  "IguassuControllers",
+  "IguassuServices",
   "ngAnimate",
   "ngCookies",
   "ngResource",
@@ -21,8 +21,8 @@ var app = angular.module("ArrebolApp", [
   "toastr"
 ]);
 
-angular.module("ArrebolControllers", ["ngResource"]);
-angular.module("ArrebolServices", ["ngResource"]);
+angular.module("IguassuControllers", ["ngResource"]);
+angular.module("IguassuServices", ["ngResource"]);
 
 // Import variables if present (from env.js)
 var env = {};

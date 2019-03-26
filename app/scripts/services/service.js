@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ArrebolServices').service(
+angular.module('IguassuServices').service(
 	'Session',
 	function ($window) {
 		var session = {};
@@ -64,7 +64,7 @@ angular.module('ArrebolServices').service(
 	}
 );
 
-angular.module('ArrebolServices').service(
+angular.module('IguassuServices').service(
 	'NonceService',
 	function ($http, appConfig) {
 		var nonceServ = {};
@@ -83,7 +83,7 @@ angular.module('ArrebolServices').service(
 	}
 );
 
-angular.module('ArrebolServices').service(
+angular.module('IguassuServices').service(
 	'AuthenticationService',
 	function ($http, $location, appConfig, NonceService, Session, ExternalOAuthService) {
 		var authServ = {};
@@ -140,7 +140,7 @@ angular.module('ArrebolServices').service(
 	}
 );
 
-angular.module('ArrebolServices').service(
+angular.module('IguassuServices').service(
 	'TasksService',
 	function ($http, appConfig, NonceService, Session) {
 		var tasksService = {};
@@ -261,7 +261,7 @@ angular.module('ArrebolServices').service(
 	}
 );
 
-angular.module('ArrebolServices').service(
+angular.module('IguassuServices').service(
 	'ExternalOAuthService',
 	function ($http, appConfig, NonceService, Session) {
 		var externalOAuthService = {};

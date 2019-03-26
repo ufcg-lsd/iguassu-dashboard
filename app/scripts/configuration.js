@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc configuration
- * @name ArrebolApp.constant:arrebolConfig
+ * @name IguassuApp.constant:iguassuConfig
  * @description
- * # arrebolConfig
- * Configuration of the ArrebolApp
+ * # iguassuConfig
+ * Configuration of the IguassuApp
  */
-angular.module('ArrebolApp')
-  .constant('arrebolConfig', {
-  	'arrebolServiceBaseUrl' : 'http://arrebol/api'
+angular.module('IguassuApp')
+  .constant('iguassuConfig', {
+  	'iguassuServiceBaseUrl' : 'http://iguassu.lsd.ufcg.edu.br'
   });

@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name ArrebolApp.controller:AuthCtrl
+ * @name IguassuApp.controller:AuthCtrl
  * @description
  * # AuthCtrl
- * Controller of the ArrebolApp
+ * Controller of the IguassuApp
  */
 angular
-  .module("ArrebolControllers")
+  .module("IguassuControllers")
   .controller("AuthCtrl", function(
     $rootScope,
     $scope,
