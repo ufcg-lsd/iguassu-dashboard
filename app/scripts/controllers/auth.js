@@ -42,6 +42,7 @@ angular
 
     function doLoginSuccessCallBack(res) {
       $scope.userRecentlyGotOAuthToken = true;
+      console.log(res);
       var userToken = res.token
         ? res.token
         : res.data
@@ -63,9 +64,7 @@ angular
             "client_id=" +
             appConfig.owncloudClientId +
             "&redirect_uri=" +
-            appConfig.owncloudClientRedirectUrl +
-            "&user=" +
-            $scope.owncloudUsername;
+            appConfig.owncloudClientRedirectUrl;
           $window.location.href = req;
         } else {
           console.log("Login error: " + JSON.stringify(error));

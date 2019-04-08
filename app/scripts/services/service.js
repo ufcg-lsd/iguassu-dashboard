@@ -261,6 +261,7 @@ angular.module('ArrebolServices').service(
 
 		externalOAuthService.getUserExternalOAuthToken = function (userName, callbackSuccess, callbackError) {
 			var user = Session.getUser();
+			console.log(user);
 			if (user.token) {
                 callbackSuccess(user.token);
 			} else {
@@ -280,7 +281,7 @@ angular.module('ArrebolServices').service(
 				headers: headers
 			}).then(
 				callbackSuccess,
-				callbackError
+				callbackError				
 			);
 		};
 
