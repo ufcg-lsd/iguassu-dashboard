@@ -22,30 +22,7 @@
 <body ng-app="ArrebolApp">
   <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-  <header ng-controller="AuthCtrl">
-    <div ng-if="getUsername()">
-      <div class="top-bar-upper">
-        <div class="container-fluid">
-          <div class="text-right logout-icon" ng-click="doLogout()">
-            <b>{{getUsername()}}</b>    
-          </div>
-          <div class="row">
-            <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-2 col-lg-offset-5">
-                <a href="/">
-                  <img src="images/10fundoazul.png" alt="Arrebol" class="logo" />
-                </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="top-bar-bottom">
-        <div class="col-md-offset-11 col-md-1">
-          <!--<img src="images/logo2.png" alt="Arrebol" class="logo" />-->
-        </div>
-      </div>      
-    </div>
-  </header>
+    <![endif]-->  
   <div class="page-wrapper">
     <div class="container">
       <div class="row">
@@ -61,7 +38,6 @@
       <div ng-view=""></div>
     </div>
   </div>
-
   <!-- Google Analytics: change UA-XXXXX-X to be your site's ID
      <script>
        !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
