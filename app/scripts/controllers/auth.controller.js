@@ -87,6 +87,7 @@ angular
         AuthenticationService.doLogout();
         $scope.owncloudUsername = undefined;
         $location.path("/");
+        $route.reload();
       };
       
       checkIfUrlHasAuthorizationCode();
@@ -96,7 +97,7 @@ angular
           console.log(error);
         };
         var successCallback = function(res) {          
-          console.log("Request of token was sucessfull");
+          console.log("Request of token was sucessfull.");
           $scope.accessToken = res.data.access_token;          
           $scope.refreshToken = res.data.refresh_token;
           $scope.owncloudUsername = res.data.user_id;        

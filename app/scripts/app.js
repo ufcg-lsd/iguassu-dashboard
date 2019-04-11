@@ -48,10 +48,8 @@ app.constant(
 app.config(function($routeProvider) {
   var alreadyLoggedIn = function($location, AuthenticationService) {
     var user = AuthenticationService.getUser();    
-    if (Object.getOwnPropertyNames(user).length != 0) {      
-           
-      if (user.name) {
-        console.log("User logged: " + user.name);        
+    if (Object.getOwnPropertyNames(user).length != 0) {                 
+      if (user.name) {                
         $location.path("/tasks");        
       } 
     } else {

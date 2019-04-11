@@ -39,8 +39,7 @@ angular.module('IguassuServices').service(
 				name: undefined,
 				token: undefined
 			};
-			localStoreUser(session.user);
-			$route.reload();
+			localStoreUser(session.user);			
 		};
 
 		session.getUser = function () {
