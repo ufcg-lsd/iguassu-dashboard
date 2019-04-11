@@ -24,7 +24,6 @@ var app = angular.module("IguassuApp", [
 angular.module("IguassuControllers", ["ngResource"]);
 angular.module("IguassuServices", ["ngResource"]);
 
-// Import variables if present (from env.js)
 var env = {};
 if (window) {
   Object.assign(env, window.__env);
@@ -47,23 +46,13 @@ app.constant(
 );
 
 app.config(function($routeProvider) {
-  var checkUser = function($location, AuthenticationService) {
-    if (!AuthenticationService.checkCAFeUser()) {
-      $location.path("/");
-    }
-  };
-
   var alreadyLoggedIn = function($location, AuthenticationService) {
-    if (
-      AuthenticationService.checkIfUrlHasCAFeEduUsername() ||
-      AuthenticationService.checkCAFeUser()
-    ) {
-      var user = AuthenticationService.getUser();
-      console.log("Check if has Cafe edu username: " + AuthenticationService.checkIfUrlHasCAFeEduUsername());
-      console.log("User info: " + user.name);
-      console.log("CheckCafeUser : " + AuthenticationService.checkCAFeUser());
-      if (user.name) { 
-        $location.url("/tasks");
+    var user = AuthenticationService.getUser();    
+    if (Object.getOwnPropertyNames(user).length != 0) {      
+           
+      if (user.name) {
+        console.log("User logged: " + user.name);        
+        $location.path("/tasks");        
       } 
     } else {
       $location.path("/");
@@ -88,18 +77,11 @@ app.config(function($routeProvider) {
     .when("/tasks/:job", {
       templateUrl: "views/tasks.html",
       resolve: {
-        check: checkUser
+        check: alreadyLoggedIn
       },
       controller: "TasksCtrl"
     })
-    .when("/owncloud", {
-      templateUrl: "views/authowncloud.html",
-      resolve: {
-        check: alreadyLoggedIn
-      },
-      controller: "AuthCtrl"
-    })
     .otherwise({
-      redirectTo: "/tasks"
+      redirectTo: "/"
     });
 });

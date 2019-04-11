@@ -14,118 +14,115 @@ angular
     $scope,
     $location,
     $window,
-    toastr,
+    $route,    
     Session,
     AuthenticationService,
     ExternalOAuthService,
     appConfig
   ) {
-    $scope.owncloudUsername = undefined;
-    $scope.password = undefined;
-    $scope.authType = "not-refreshed";
-    $scope.userRecentlyGotOAuthToken = false;
-
-    function checkIfUrlHasAuthorizationCode() {
-      var currentUrl = $location.$$absUrl;
-      var re = /code=[a-zA-Z0-9.]+(?=#!)/;
-      var regexAns = re.exec(currentUrl);
-      if (
-        regexAns !== null &&
-        typeof regexAns[0] === "string" &&
-        !$scope.userRecentlyGotOAuthToken
-      ) {
-        var splittedRegexAns = regexAns[0].split("=");
-        var authorizationCode = splittedRegexAns[1];
-        console.log(authorizationCode);
-        return authorizationCode;
-      }
-    }
-
-    function doLoginSuccessCallBack(res) {
-      $scope.userRecentlyGotOAuthToken = true;
-      console.log(res);
-      var userToken = res.token
-        ? res.token
-        : res.data
-          ? res.data.accessToken
-          : null; // key is token when response comes
-      // from Iguassu but is accesToken when comes from OwnCloud
-      Session.createTokenSession($scope.owncloudUsername, userToken);
-      $location.url("/tasks");
-    }
-
-    $scope.doOwncloudOAuth = function() {
-      var failCallBack = function(error) {
-        //Erro call back
-        if (error.status === 400) {
-          var req =
-            appConfig.owncloudServerUrl +
-            "/index.php/apps/oauth2/authorize" +
-            "?response_type=code&" +
-            "client_id=" +
-            appConfig.owncloudClientId +
-            "&redirect_uri=" +
-            appConfig.owncloudClientRedirectUrl;
-          $window.location.href = req;
-        } else {
-          console.log("Login error: " + JSON.stringify(error));
-        }
-      };
-
-      AuthenticationService.signInWithOAuth(
-        $scope.owncloudUsername,
-        doLoginSuccessCallBack,
-        failCallBack
-      );
-    };
-
-    $scope.doLoginWithCafe = function() {
-      if (Session.getUser().eduUsername) {
-        $location.path("/tasks");
-      }
-      $window.location.href = appConfig.nafAuthUrl;
-    };
-
-    $scope.getUsername = function() {
-      return AuthenticationService.getUser().eduUsername;
-    };
-
-    $scope.doLogout = function() {
-      AuthenticationService.doLogout();
       $scope.owncloudUsername = undefined;
-      $location.path("/");
-    };
+      $scope.authorizationCode = undefined;
+      $scope.accessToken = undefined;
+      $scope.refreshToken = undefined;
+      $scope.authType = "not-refreshed";
+      $scope.userRecentlyGotOAuthToken = false;    
 
-    $scope.goToAuthWithOwncloud = function() {
-      $location.path("/owncloud");
-    };
+      function checkIfUrlHasAuthorizationCode() {
+        var currentUrl = $location.$$absUrl;
+        var re = /code=[a-zA-Z0-9.]+(?=#!)/;
+        var regexAns = re.exec(currentUrl);
+        if (
+          regexAns !== null &&
+          typeof regexAns[0] === "string" &&
+          !$scope.userRecentlyGotOAuthToken
+        ) {
+          var splittedRegexAns = regexAns[0].split("=");
+          var authorizationCode = splittedRegexAns[1];
 
-    var authorizationCode = checkIfUrlHasAuthorizationCode();
-    if (authorizationCode !== undefined) {
-      var failCallback = function(error) {
-        console.log(error);
+          $scope.authorizationCode = authorizationCode;         
+        }
+      }
+
+      function doLoginSuccessCallBack(res) {
+        $scope.userRecentlyGotOAuthToken = true;
+        console.log(res);
+        var userToken = res.token
+          ? res.token
+          : res.data
+            ? res.data.accessToken
+            : null; // key is token when response comes
+        // from Iguassu but is accesToken when comes from OwnCloud
+        Session.createTokenSession($scope.owncloudUsername, userToken);
+        $location.url("/tasks");
+      }
+
+      $scope.doOwncloudOAuth = function() {
+        var failCallBack = function(error) {          
+          if (error.status === 400) {
+            var req =
+              appConfig.owncloudServerUrl +
+              "/index.php/apps/oauth2/authorize" +
+              "?response_type=code&" +
+              "client_id=" +
+              appConfig.owncloudClientId +
+              "&redirect_uri=" +
+              appConfig.owncloudClientRedirectUrl;
+            $window.location.href = req;
+          } else {
+            console.log("Login error: " + JSON.stringify(error));
+          }
+        };
+
+        AuthenticationService.signInWithOAuth(          
+          doLoginSuccessCallBack,
+          failCallBack
+        );
+      };    
+
+      $scope.getUsername = function() {
+        return AuthenticationService.getUser().name;
       };
-      var successCallback = function(res) {
-        console.log("Request of token was sucessfull");
-        var accessToken = res.data.access_token;
-        var refreshToken = res.data.refresh_token;
-        $scope.owncloudUsername = res.data.user_id;
 
-        if ($scope.owncloudUsername !== undefined) {
-          // TODO: do not post if user just got authcode and posted to iguassu
+      $scope.doLogout = function() {
+        AuthenticationService.doLogout();
+        $scope.owncloudUsername = undefined;
+        $location.path("/");
+      };
+      
+      checkIfUrlHasAuthorizationCode();
+
+      if ($scope.authorizationCode !== undefined) {
+        var failCallback = function(error) {
+          console.log(error);
+        };
+        var successCallback = function(res) {          
+          console.log("Request of token was sucessfull");
+          $scope.accessToken = res.data.access_token;          
+          $scope.refreshToken = res.data.refresh_token;
+          $scope.owncloudUsername = res.data.user_id;        
+
+          Session.createTokenSession($scope.owncloudUsername, $scope.accessToken);
+          $route.reload();
+        };
+        
+        var user = AuthenticationService.getUser();
+        if (Object.getOwnPropertyNames(user).length == 0) {
+          ExternalOAuthService.requestOwncloudAccessToken(
+            $scope.authorizationCode,
+            successCallback,
+            failCallback
+          );
+        }        
+
+        if ($scope.accessToken !== undefined) {
           ExternalOAuthService.postUserExternalOAuthToken(
             $scope.owncloudUsername,
-            accessToken,
-            refreshToken,
+            $scope.accessToken,
+            $scope.refreshToken,
             doLoginSuccessCallBack,
             failCallback
           );
-        }
-      };
-      ExternalOAuthService.requestOwncloudAccessToken(
-        authorizationCode,
-        successCallback,
-        failCallback
-      );
+        }       
+      }   
     }
-  });
+  );

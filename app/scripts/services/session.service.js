@@ -2,12 +2,11 @@
 
 angular.module('IguassuServices').service(
 	'Session',
-	function ($window) {
+	function ($window, $route) {
 		var session = {};
 		session.user = {
 			name: undefined,
-		  	token: undefined,
-		  	eduUsername: undefined
+		  	token: undefined,		  	
 		};
 
 		session.USER_COOKIE_KEY = "iguassu-user-cookie-key";
@@ -20,19 +19,16 @@ angular.module('IguassuServices').service(
 		  return JSON.parse($window.localStorage.getItem(session.USER_COOKIE_KEY));
 		}
     
-		if (getLocalStoredUser()) {			
-			if (getLocalStoredUser().eduUsername !== undefined) {				
-				session.user = getLocalStoredUser();
-			}
+		if (getLocalStoredUser()) {	
+			session.user = getLocalStoredUser();	
 		} else {			
 		  localStoreUser(session.user);
-    	}
+		}		
 
 		session.createTokenSession = function (userName, userToken) {			
 			let oldSession = session.getUser();			
 			session.user = {
 				name: oldSession.name ? oldSession.name : userName,
-				eduUsername: oldSession.eduUsername,
 				token: oldSession.token ? oldSession.token : userToken
 			};			
       		localStoreUser(session.user);
@@ -41,23 +37,14 @@ angular.module('IguassuServices').service(
 		session.destroy = function () {
 			session.user = {
 				name: undefined,
-				token: undefined,
-        		eduUsername: undefined
+				token: undefined
 			};
-      		localStoreUser(session.user);
+			localStoreUser(session.user);
+			$route.reload();
 		};
 
 		session.getUser = function () {
 			return getLocalStoredUser();
-		};
-
-		session.setEduUsername = function (eduUsername) {
-			session.user = {
-				name: undefined,
-        		eduUsername: eduUsername,
-        		token: undefined
-      		};
-      		localStoreUser(session.user);
 		};
 		
 		return session;

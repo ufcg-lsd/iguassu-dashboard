@@ -2,12 +2,12 @@
 
 angular.module('IguassuServices').service(
 	'ExternalOAuthService',
-	function ($http, appConfig, NonceService, Session) {
+	function ($http, appConfig, Session) {
 		var externalOAuthService = {};
 
 		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
 
-		externalOAuthService.getUserExternalOAuthToken = function (userName, callbackSuccess, callbackError) {
+		externalOAuthService.getUserExternalOAuthToken = function (callbackSuccess, callbackError) {
 			var user = Session.getUser();
 			console.log(user);
 			if (user.token) {

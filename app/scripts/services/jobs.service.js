@@ -15,7 +15,7 @@ angular.module('IguassuServices').service(
 
 				var user = Session.getUser();
 				var creds = {					
-					username: user.name, // Change this to eduUsername
+					username: user.name,
 					token: user.token,
 					nonce: nonce
 				};
