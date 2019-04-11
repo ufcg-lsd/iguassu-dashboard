@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ArrebolServices').service(
+angular.module('IguassuServices').service(
 	'NonceService',
 	function ($http, appConfig) {
 		var nonceServ = {};

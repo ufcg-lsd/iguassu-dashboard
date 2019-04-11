@@ -1,4 +1,4 @@
-# Arrebol Dashboard
+# Iguassu Dashboard
 
 Statement Driven Executor and Scheduler.
 

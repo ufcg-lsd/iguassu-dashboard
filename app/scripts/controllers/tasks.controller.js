@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name ArrebolApp.controller:TasksCtrl
+ * @name IguassuApp.controller:TasksCtrl
  * @description
  * # TasksCtrl
- * Controller of the ArrebolApp
+ * Controller of the IguassuApp
  */
-angular.module('ArrebolControllers').controller(
+angular.module('IguassuControllers').controller(
   'TasksCtrl',
   function ($scope, $rootScope, $routeParams, TasksService) {
     

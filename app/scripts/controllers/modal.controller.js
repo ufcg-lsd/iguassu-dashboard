@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name ArrebolApp.controller:SubmissionModalCtrl
+ * @name IguassuApp.controller:SubmissionModalCtrl
  * @description
  * # SubmissionModalCtrl
- * Controller of the ArrebolApp
+ * Controller of the IguassuApp
  */
-angular.module('ArrebolControllers').controller(
+angular.module('IguassuControllers').controller(
 	'SubmissionModalCtrl',
 	function ($scope, $uibModalInstance, TasksService) {
 		$scope.jdffile = undefined;

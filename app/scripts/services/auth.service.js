@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ArrebolServices').service(
+angular.module('IguassuServices').service(
 	'AuthenticationService',
 	function ($http, $location, appConfig, NonceService, Session, ExternalOAuthService) {
 		var authServ = {};

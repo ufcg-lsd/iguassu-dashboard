@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ArrebolServices').service(
+angular.module('IguassuServices').service(
 	'Session',
 	function ($window) {
 		var session = {};

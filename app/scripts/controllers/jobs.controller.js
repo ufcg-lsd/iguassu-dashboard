@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name ArrebolApp.controller:JobsCtrl
+ * @name IguassuApp.controller:JobsCtrl
  * @description
  * # JobsCtrl
- * Controller of the ArrebolApp
+ * Controller of the IguassuApp
  */
-angular.module('ArrebolControllers').controller(
+angular.module('IguassuControllers').controller(
 	'JobsCtrl',
 	function ($rootScope, $scope, $uibModal, $location, toastr, TasksService, ExternalOAuthService, $window) {
 
