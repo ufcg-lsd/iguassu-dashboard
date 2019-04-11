@@ -49,8 +49,21 @@ app.config(function($routeProvider) {
   var alreadyLoggedIn = function($location, AuthenticationService) {
     var user = AuthenticationService.getUser();    
     if (Object.getOwnPropertyNames(user).length != 0) {                 
-      if (user.name) {                
-        $location.path("/tasks");        
+      if (user.name) {                        
+        $location.path("/tasks");    
+        
+      } 
+    } else {
+      $location.path("/");
+    }
+  }
+
+  var checkUser = function($location, AuthenticationService) {
+    var user = AuthenticationService.getUser();    
+    if (Object.getOwnPropertyNames(user).length != 0) {                 
+      if (user.name) {                        
+        $location.path($location.url());    
+        
       } 
     } else {
       $location.path("/");
@@ -75,7 +88,7 @@ app.config(function($routeProvider) {
     .when("/tasks/:job", {
       templateUrl: "views/tasks.html",
       resolve: {
-        check: alreadyLoggedIn
+        check: checkUser
       },
       controller: "TasksCtrl"
     })

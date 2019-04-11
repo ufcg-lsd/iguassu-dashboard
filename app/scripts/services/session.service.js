@@ -6,7 +6,8 @@ angular.module('IguassuServices').service(
 		var session = {};
 		session.user = {
 			name: undefined,
-		  	token: undefined,		  	
+			token: undefined,
+			refreshToken: undefined		  	
 		};
 
 		session.USER_COOKIE_KEY = "iguassu-user-cookie-key";
@@ -25,11 +26,12 @@ angular.module('IguassuServices').service(
 		  localStoreUser(session.user);
 		}		
 
-		session.createTokenSession = function (userName, userToken) {			
+		session.createTokenSession = function (userName, userToken, refreshToken) {			
 			let oldSession = session.getUser();			
 			session.user = {
 				name: oldSession.name ? oldSession.name : userName,
-				token: oldSession.token ? oldSession.token : userToken
+				token: oldSession.token ? oldSession.token : userToken,
+				refreshToken: oldSession.refreshToken ? oldSession.refreshToken : refreshToken
 			};			
       		localStoreUser(session.user);
 		};
@@ -37,7 +39,8 @@ angular.module('IguassuServices').service(
 		session.destroy = function () {
 			session.user = {
 				name: undefined,
-				token: undefined
+				token: undefined,
+				refreshToken: undefined			
 			};
 			localStoreUser(session.user);			
 		};

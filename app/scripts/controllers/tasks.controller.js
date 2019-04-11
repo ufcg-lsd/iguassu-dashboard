@@ -14,12 +14,12 @@ angular.module('IguassuControllers').controller(
     $scope.job = undefined;
     $scope.search = undefined;
 
-      var updateTasks = function (returnedTaskList) {
-          function updateTaskStatus(element, index, array) {
-              $scope.job.tasks[index].state = element.state;
-          }
-          returnedTaskList.forEach(updateTaskStatus);
-      };
+    var updateTasks = function (returnedTaskList) {
+        function updateTaskStatus(element, index, array) {
+            $scope.job.tasks[index].state = element.state;
+        }
+        returnedTaskList.forEach(updateTaskStatus);
+    };
 
     $scope.getTask = function(id) {
       var successCallback = function(job) {

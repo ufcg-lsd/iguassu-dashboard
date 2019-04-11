@@ -41,7 +41,7 @@ angular.module('IguassuServices').service(
 				usernameOwner: userName,
 				expirationDate: oneHourInSeconds
 			};
-			let headers = {};
+			let headers = {}; 		
 
 			$http.post(externalOAuthTokenUrl, data, {
 				headers: headers

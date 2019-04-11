@@ -43,17 +43,9 @@ angular
         }
       }
 
-      function doLoginSuccessCallBack(res) {
+      function doLoginSuccessCallBack() {
         $scope.userRecentlyGotOAuthToken = true;
-        console.log(res);
-        var userToken = res.token
-          ? res.token
-          : res.data
-            ? res.data.accessToken
-            : null; // key is token when response comes
-        // from Iguassu but is accesToken when comes from OwnCloud
-        Session.createTokenSession($scope.owncloudUsername, userToken);
-        $location.url("/tasks");
+        console.log("The user has been posted with success in the Iguassu.");      
       }
 
       $scope.doOwncloudOAuth = function() {
@@ -90,7 +82,7 @@ angular
         $route.reload();
       };
       
-      checkIfUrlHasAuthorizationCode();
+      checkIfUrlHasAuthorizationCode();      
 
       if ($scope.authorizationCode !== undefined) {
         var failCallback = function(error) {
@@ -102,28 +94,28 @@ angular
           $scope.refreshToken = res.data.refresh_token;
           $scope.owncloudUsername = res.data.user_id;        
 
-          Session.createTokenSession($scope.owncloudUsername, $scope.accessToken);
+          Session.createTokenSession($scope.owncloudUsername, $scope.accessToken, $scope.refreshToken);
+
+          if ($scope.accessToken) {
+            ExternalOAuthService.postUserExternalOAuthToken(
+              $scope.owncloudUsername,
+              $scope.accessToken,
+              $scope.refreshToken,
+              doLoginSuccessCallBack,
+              failCallback
+            );
+          } 
           $route.reload();
         };
-        
-        var user = AuthenticationService.getUser();
+
+        var user = AuthenticationService.getUser();                
         if (Object.getOwnPropertyNames(user).length == 0) {
           ExternalOAuthService.requestOwncloudAccessToken(
             $scope.authorizationCode,
             successCallback,
             failCallback
           );
-        }        
-
-        if ($scope.accessToken !== undefined) {
-          ExternalOAuthService.postUserExternalOAuthToken(
-            $scope.owncloudUsername,
-            $scope.accessToken,
-            $scope.refreshToken,
-            doLoginSuccessCallBack,
-            failCallback
-          );
-        }       
-      }   
+        }                        
+      }       
     }
   );
