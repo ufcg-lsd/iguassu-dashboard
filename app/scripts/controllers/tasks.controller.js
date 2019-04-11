@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name ArrebolApp.controller:TaskCtrl
+ * @name ArrebolApp.controller:TasksCtrl
  * @description
- * # TaskCtrl
+ * # TasksCtrl
  * Controller of the ArrebolApp
  */
 angular.module('ArrebolControllers').controller(

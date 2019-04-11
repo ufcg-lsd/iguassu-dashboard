@@ -36,6 +36,7 @@ angular
       ) {
         var splittedRegexAns = regexAns[0].split("=");
         var authorizationCode = splittedRegexAns[1];
+        console.log(authorizationCode);
         return authorizationCode;
       }
     }

@@ -59,11 +59,12 @@ app.config(function($routeProvider) {
       AuthenticationService.checkCAFeUser()
     ) {
       var user = AuthenticationService.getUser();
+      console.log("Check if has Cafe edu username: " + AuthenticationService.checkIfUrlHasCAFeEduUsername());
+      console.log("User info: " + user.name);
+      console.log("CheckCafeUser : " + AuthenticationService.checkCAFeUser());
       if (user.name) { 
         $location.url("/tasks");
-      } else {
-        $location.url("/owncloud");
-      }
+      } 
     } else {
       $location.path("/");
     }
@@ -71,7 +72,7 @@ app.config(function($routeProvider) {
 
   $routeProvider
     .when("/", {
-      templateUrl: "views/login.html",
+      templateUrl: "views/authowncloud.html",
       resolve: {
         check: alreadyLoggedIn
       },
@@ -82,7 +83,7 @@ app.config(function($routeProvider) {
       resolve: {
         check: alreadyLoggedIn
       },
-      controller: "MainCtrl"
+      controller: "JobsCtrl"
     })
     .when("/tasks/:job", {
       templateUrl: "views/tasks.html",
