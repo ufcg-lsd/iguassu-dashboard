@@ -9,5 +9,5 @@
  */
 angular.module('IguassuApp')
   .constant('iguassuConfig', {
-  	'iguassuServiceBaseUrl' : 'http://iguassu.lsd.ufcg.edu.br'
+  	'iguassuServiceBaseUrl' : 'https://iguassu.lsd.ufcg.edu.br'
   });

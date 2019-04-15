@@ -1,3 +1,27 @@
+<header ng-controller="AuthCtrl">
+  <div ng-if="getUsername()">
+    <div class="top-bar-upper">
+      <div class="container-fluid">
+        <div class="text-right logout-icon" ng-click="doLogout()">
+          <b>{{getUsername()}}</b>    
+        </div>
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-2 col-lg-offset-5">
+              <a href="/">
+                <img style="border-radius: 50%;" src="images/10fundoazul.png" alt="Iguassu" class="logo" />
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="top-bar-bottom">
+      <div class="col-md-offset-11 col-md-1">
+        <!-- <img src="images/logo2.png" alt="Iguassu" class="logo" /> -->
+      </div>
+    </div>      
+  </div>
+</header>
+
 <!-- Template for modal -->
 <script type="text/ng-template" id="myModalContent.html">
   <div class="modal-header">
@@ -54,7 +78,9 @@
           </a>
         </td>
         <td class="col-md-1">
-          <button class="btn btn-sm col-md-12" ng-click="stopJob(job);" align="center">Stop</button>
+            <div class="text-center">                
+                <button class="btn btn-sm col-md-12" ng-click="stopJob(job);" >Stop</button>
+            </div>          
         </td>
       </tr>
     </tbody>

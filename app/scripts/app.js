@@ -24,7 +24,6 @@ var app = angular.module("IguassuApp", [
 angular.module("IguassuControllers", ["ngResource"]);
 angular.module("IguassuServices", ["ngResource"]);
 
-// Import variables if present (from env.js)
 var env = {};
 if (window) {
   Object.assign(env, window.__env);
@@ -47,23 +46,25 @@ app.constant(
 );
 
 app.config(function($routeProvider) {
-  var checkUser = function($location, AuthenticationService) {
-    if (!AuthenticationService.checkCAFeUser()) {
+  var alreadyLoggedIn = function($location, AuthenticationService) {
+    var user = AuthenticationService.getUser();    
+    if (Object.getOwnPropertyNames(user).length != 0) {                 
+      if (user.name) {                        
+        $location.path("/tasks");    
+        
+      } 
+    } else {
       $location.path("/");
     }
-  };
+  }
 
-  var alreadyLoggedIn = function($location, AuthenticationService) {
-    if (
-      AuthenticationService.checkIfUrlHasCAFeEduUsername() ||
-      AuthenticationService.checkCAFeUser()
-    ) {
-      var user = AuthenticationService.getUser();
-      if (user.name) { // if null, user has not authenticated on owncloud
-        $location.url("/tasks");
-      } else {
-        $location.url("/owncloud");
-      }
+  var checkUser = function($location, AuthenticationService) {
+    var user = AuthenticationService.getUser();    
+    if (Object.getOwnPropertyNames(user).length != 0) {                 
+      if (user.name) {                        
+        $location.path($location.url());    
+        
+      } 
     } else {
       $location.path("/");
     }
@@ -71,7 +72,7 @@ app.config(function($routeProvider) {
 
   $routeProvider
     .when("/", {
-      templateUrl: "views/login.html",
+      templateUrl: "views/authowncloud.html",
       resolve: {
         check: alreadyLoggedIn
       },
@@ -82,7 +83,7 @@ app.config(function($routeProvider) {
       resolve: {
         check: alreadyLoggedIn
       },
-      controller: "MainCtrl"
+      controller: "JobsCtrl"
     })
     .when("/tasks/:job", {
       templateUrl: "views/tasks.html",
@@ -91,14 +92,7 @@ app.config(function($routeProvider) {
       },
       controller: "TasksCtrl"
     })
-    .when("/owncloud", {
-      templateUrl: "views/authowncloud.html",
-      resolve: {
-        check: alreadyLoggedIn
-      },
-      controller: "AuthCtrl"
-    })
     .otherwise({
-      redirectTo: "/tasks"
+      redirectTo: "/"
     });
 });
