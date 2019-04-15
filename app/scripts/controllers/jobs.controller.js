@@ -79,5 +79,3 @@ angular.module('IguassuControllers').controller(
 			);
 		};
 	});
-
-
