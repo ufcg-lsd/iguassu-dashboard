@@ -35,7 +35,8 @@ angular.module('IguassuControllers').controller(
 				};
 			});
 			
-			return tasksCompleted === job.tasks.length ? "COMPLETED" : job.state ;
+			return (tasksCompleted === job.tasks.length && tasksCompleted !== 0) 
+				? "COMPLETED" : job.state;
 		};
 
 		$scope.stopJob = function (job) {
