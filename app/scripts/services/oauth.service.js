@@ -2,7 +2,7 @@
 
 angular.module('IguassuServices').service(
 	'ExternalOAuthService',
-	function ($http, appConfig, Session) {
+	function (appConfig, Session) {
 		var externalOAuthService = {};
 
 		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
@@ -25,12 +25,9 @@ angular.module('IguassuServices').service(
 				'Authorization': 'Basic ' + btoa(appConfig.owncloudClientId + ":" + appConfig.owncloudClientSecret)
 			};
 
-			$http.post(url, {}, {
-				headers: headers
-			}).then(
-				callbackSuccess,
-				callbackError				
-			);
+			axios.post(url, {}, { headers: headers })
+			.then(callbackSuccess)
+			.catch(callbackError);
 		};
 
 		externalOAuthService.postUserExternalOAuthToken = function (userName, accessToken, refreshToken, successCallback, failCallback) {
@@ -43,12 +40,9 @@ angular.module('IguassuServices').service(
 			};
 			let headers = {}; 		
 
-			$http.post(externalOAuthTokenUrl, data, {
-				headers: headers
-			}).then(
-				successCallback,
-				failCallback
-			);
+			axios.post(externalOAuthTokenUrl, data, { headers: headers })
+			.then(successCallback)
+			.catch(failCallback);
 		};
 
 		return externalOAuthService;

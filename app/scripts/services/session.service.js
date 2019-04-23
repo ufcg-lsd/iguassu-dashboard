@@ -2,7 +2,7 @@
 
 angular.module('IguassuServices').service(
 	'Session',
-	function ($window, $route) {
+	function ($window) {
 		var session = {};
 		session.user = {
 			name: undefined,

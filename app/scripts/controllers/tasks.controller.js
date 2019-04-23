@@ -9,14 +9,16 @@
  */
 angular.module('IguassuControllers').controller(
   'TasksCtrl',
-  function ($scope, $rootScope, $routeParams, TasksService) {
+  function ($scope, $routeParams, TasksService) {
     
     $scope.job = undefined;
     $scope.search = undefined;
 
     var updateTasks = function (returnedTaskList) {
-        function updateTaskStatus(element, index, array) {
-            $scope.job.tasks[index].state = element.state;
+        function updateTaskStatus(element, index, array) { 
+            if ($scope.job.tasks[index].state !== undefined) {
+              $scope.job.tasks[index].state = element.state;
+            }            
         }
         returnedTaskList.forEach(updateTaskStatus);
     };

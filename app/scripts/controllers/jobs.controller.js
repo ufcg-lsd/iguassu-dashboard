@@ -9,10 +9,10 @@
  */
 angular.module('IguassuControllers').controller(
 	'JobsCtrl',
-	function ($rootScope, $scope, $uibModal, $location, toastr, TasksService, ExternalOAuthService, $window) {
+	function ($scope, $uibModal,toastr, TasksService) {
 
 		$scope.jobs = [];
-		$scope.search = [];
+		$scope.search = [];		
 
 		$scope.updateTaskList = function () {
 			var successCallback = function (data) {
@@ -22,18 +22,20 @@ angular.module('IguassuControllers').controller(
 				console.log(error);
 			};
 			TasksService.getTasksList(successCallback, failCallback);
-		};
+		};		
 
 		$scope.updateTaskList();
 
-		$scope.getStatusString = function (job) {
-			if (job.completition === 100) {
-				return 'COMPLETED';
-			} else if (job.completition > 0) {
-				return 'RUNNING';
-			} else {
-				return 'SUBMITTED';
-			}
+		$scope.getStatusString = function (job) {			
+			let tasksCompleted = 0;
+
+			job.tasks.forEach(function(task){
+				if (task.state === "COMPLETED") {
+					tasksCompleted++;
+				};
+			});
+			
+			return tasksCompleted === job.tasks.length ? "COMPLETED" : job.state ;
 		};
 
 		$scope.stopJob = function (job) {
