@@ -28,14 +28,20 @@ angular.module('IguassuControllers').controller(
 
 		$scope.getStatusString = function (job) {			
 			let tasksCompleted = 0;
+			const FINISHED = "FINISHED";
 
 			job.tasks.forEach(function(task){
-				if (task.state === "COMPLETED") {
+				if (task.state === FINISHED) {
 					tasksCompleted++;
 				};
 			});
+
+			let currentState = job.state;
+
+			if (currentState === "CREATED") { currentState = "RUNNING"; }
 			
-			return tasksCompleted === job.tasks.length ? "COMPLETED" : job.state ;
+			return (tasksCompleted !== 0 && tasksCompleted === job.tasks.length ) 
+				? FINISHED : currentState;
 		};
 
 		$scope.stopJob = function (job) {
