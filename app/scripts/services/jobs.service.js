@@ -2,7 +2,7 @@
 
 angular.module('IguassuServices').service(
 	'TasksService',
-	function ($http, appConfig, NonceService, Session) {
+	function (appConfig, NonceService, Session, $http) {
 		var tasksService = {};
 
 		var resourceJobUrl = appConfig.iguassuServerHost + appConfig.jobEndpoint;
@@ -22,10 +22,8 @@ angular.module('IguassuServices').service(
 				$http.get(
 					resourceJobUrl,
 					{headers: {'X-auth-credentials': JSON.stringify(creds)}}
-				).then(
-					successCallback,
-					callbackError
-				);
+				)
+				.then(successCallback, callbackError)
 			};
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
@@ -45,10 +43,8 @@ angular.module('IguassuServices').service(
 				$http.get(
 					resourceJobUrl + '/' + jobId,
 					{ headers: {'X-auth-credentials': JSON.stringify(creds)} }
-				).then(
-					successCallback,
-					callbackError
-				);
+				)
+					.then(successCallback,callbackError);					
 			};
 			if (jobId !== undefined) {
 				NonceService.getNonce(nonceCallback, callbackError);
@@ -82,10 +78,8 @@ angular.module('IguassuServices').service(
 							'Content-Type': undefined
 						}
 					}
-				).then(
-					callbackSuccess,
-					callbackError
-				);
+				)
+				.then(callbackSuccess, callbackError);				
 			};
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
@@ -106,11 +100,12 @@ angular.module('IguassuServices').service(
 							'X-auth-credentials': JSON.stringify(creds)
 						}
 					}
-				).then(
+				)
+				.then(
 					function (response) {
 						callbackSuccess(response.data);
 					},
-					callbackError
+					callbackError					
 				);
 			};
 			NonceService.getNonce(nonceCallback, callbackError);

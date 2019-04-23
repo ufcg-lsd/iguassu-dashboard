@@ -18,7 +18,7 @@ angular
     Session,
     AuthenticationService,
     ExternalOAuthService,
-    appConfig
+    appConfig,    
   ) {
       $scope.owncloudUsername = undefined;
       $scope.authorizationCode = undefined;
@@ -80,7 +80,7 @@ angular
         $scope.owncloudUsername = undefined;
         $location.path("/");
         $route.reload();
-      };
+      };      
       
       checkIfUrlHasAuthorizationCode();      
 
