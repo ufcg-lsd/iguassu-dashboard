@@ -8,8 +8,7 @@ angular.module('IguassuServices').service(
 		var externalOAuthTokenUrl = appConfig.iguassuServerHost + appConfig.oAuthEndpoint;
 
 		externalOAuthService.getUserExternalOAuthToken = function (callbackSuccess, callbackError) {
-			var user = Session.getUser();
-			console.log(user);
+			var user = Session.getUser();			
 			if (user.token) {
                 callbackSuccess(user.token);
 			} else {

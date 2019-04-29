@@ -17,7 +17,6 @@ angular.module('IguassuControllers').controller(
 		$scope.updateTaskList = function () {
 			var successCallback = function (data) {
 				$scope.jobs = data;
-				console.log(data);
 			};
 			var failCallback = function (error) {
 				console.log(error);
