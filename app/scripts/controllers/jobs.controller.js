@@ -14,7 +14,7 @@ angular.module('IguassuControllers').controller(
 		$scope.jobs = [];
 		$scope.search = [];		
 
-		$scope.updateTaskList = function () {
+		$scope.updateJobList = function () {
 			var successCallback = function (data) {
 				$scope.jobs = data;
 			};
@@ -24,17 +24,15 @@ angular.module('IguassuControllers').controller(
 			JobsService.getAllJobs(successCallback, failCallback);
 		};	
 		
-		var updateJobList = function () {
-			const INTERVAL_5_SECONDS = 2000;
+		var updateJobListPeriodically = function () {
+			const INTERVAL_5_SECONDS = 10000;
 			setInterval(() =>
-				JobsService.getAllJobs(),
-				INTERVAL_5_SECONDS
+				$scope.updateJobList(),
+					INTERVAL_5_SECONDS
 			);
-		};
-
-		updateJobList();
-
-		$scope.updateTaskList();
+		};	
+		
+		updateJobListPeriodically();
 
 		$scope.getStatusString = function (job) {			
 			let tasksCompleted = 0;
@@ -64,7 +62,7 @@ angular.module('IguassuControllers').controller(
 						if (data === job.id) {
 							toastr.success('The job ID ' + job.id + ' was stopped.', 'Job stopped');
 						}
-						$scope.updateTaskList();
+						$scope.updateJobList();
 					},
 					function (error) {
 						console.log(error);
@@ -90,11 +88,11 @@ angular.module('IguassuControllers').controller(
 					if (jobId) {
 						toastr.success('Job ' + jobId + ' submitted.');
 					}
-					$scope.updateTaskList();
+					$scope.updateJobList();
 				},
 				function (error) {
 					toastr.error(error);
-					$scope.updateTaskList();
+					$scope.updateJobList();
 				}
 			);
 		};
