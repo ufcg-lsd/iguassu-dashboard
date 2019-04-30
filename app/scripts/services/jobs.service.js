@@ -9,7 +9,7 @@ angular.module('IguassuServices').service(
 
 		tasksService.getTasksList = function (callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {
-				var successCallback = function (response) {
+				var successCallback = function (response) {			
 					callbackSuccess(response.data);
 				};
 
