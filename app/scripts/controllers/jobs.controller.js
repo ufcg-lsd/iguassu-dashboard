@@ -21,8 +21,18 @@ angular.module('IguassuControllers').controller(
 			var failCallback = function (error) {
 				console.log(error);
 			};
-			JobsService.getTasksList(successCallback, failCallback);
-		};		
+			JobsService.getAllJobs(successCallback, failCallback);
+		};	
+		
+		var updateJobList = function () {
+			const INTERVAL_5_SECONDS = 2000;
+			setInterval(() =>
+				JobsService.getAllJobs(),
+				INTERVAL_5_SECONDS
+			);
+		};
+
+		updateJobList();
 
 		$scope.updateTaskList();
 

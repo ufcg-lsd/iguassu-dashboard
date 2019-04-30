@@ -7,7 +7,7 @@ angular.module('IguassuServices').service(
 
 		var resourceJobUrl = appConfig.iguassuServerHost + appConfig.jobEndpoint;
 
-		jobsService.getTasksList = function (callbackSuccess, callbackError) {
+		jobsService.getAllJobs = function (callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {
 				var successCallback = function (response) {			
 					callbackSuccess(response.data);
@@ -28,7 +28,7 @@ angular.module('IguassuServices').service(
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
 
-		jobsService.getTask = function (jobId, callbackSuccess, callbackError) {
+		jobsService.getJobById = function (jobId, callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {
 				var successCallback = function (response) {
 					callbackSuccess(response.data);

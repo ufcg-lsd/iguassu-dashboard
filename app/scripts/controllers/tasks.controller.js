@@ -34,15 +34,15 @@ angular.module('IguassuControllers').controller(
       var errorCallback = function(error) {
         console.log(error);
       };
-      JobsService.getTask(id, successCallback, errorCallback);
+      JobsService.getJobById(id, successCallback, errorCallback);
     };
 
     var showsTasks = function () {
-        $scope.getTask($routeParams.job);
+        $scope.getJobById($routeParams.job);
 
         const INTERVAL_5_SECONDS = 10000;
         setInterval(() =>
-            $scope.getTask($routeParams.job),
+            $scope.getJobById($routeParams.job),
             INTERVAL_5_SECONDS
         );
     };
