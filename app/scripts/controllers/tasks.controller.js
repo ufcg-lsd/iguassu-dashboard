@@ -9,7 +9,7 @@
  */
 angular.module('IguassuControllers').controller(
   'TasksCtrl',
-  function ($scope, $routeParams, JobsService) {
+  function ($scope, $routeParams, JobsService, UtilService) {
     
     $scope.job = undefined;
     $scope.search = undefined;
@@ -41,10 +41,11 @@ angular.module('IguassuControllers').controller(
         $scope.getJobById($routeParams.job);
 
         const INTERVAL_5_SECONDS = 5000;
-        setInterval(() =>
+        const refreshIntervalId = setInterval(() =>
             $scope.getJobById($routeParams.job),
             INTERVAL_5_SECONDS
         );
+        UtilService.addIntervalId(refreshIntervalId);
     };
 
     showsTasks();

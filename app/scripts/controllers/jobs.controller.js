@@ -9,10 +9,10 @@
  */
 angular.module('IguassuControllers').controller(
 	'JobsCtrl',
-	function ($scope, $uibModal,toastr, JobsService) {
+	function ($scope, $uibModal,toastr, JobsService, Session, UtilService) {
 
 		$scope.jobs = [];
-		$scope.search = [];		
+		$scope.search = [];				
 
 		$scope.updateJobList = function () {
 			var successCallback = function (data) {
@@ -20,7 +20,7 @@ angular.module('IguassuControllers').controller(
 			};
 			var failCallback = function (error) {
 				console.log(error);
-			};
+			};			
 			JobsService.getAllJobs(successCallback, failCallback);
 		};	
 
@@ -73,12 +73,15 @@ angular.module('IguassuControllers').controller(
 
 		var updateJobListPeriodically = function () {
 			const INTERVAL_1_SECOND = 1000;
-			setInterval(() =>
+			const refreshIntervalId = setInterval(() =>
 				$scope.updateJobList(),
 				INTERVAL_1_SECOND
 			);
-		};	
-		
-		updateJobListPeriodically();
+			UtilService.addIntervalId(refreshIntervalId);
+		};			
+
+		if (Session.userIsLogged()) {
+			updateJobListPeriodically();
+		} 		
 	}
 );

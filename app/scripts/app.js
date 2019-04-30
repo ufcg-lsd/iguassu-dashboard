@@ -49,7 +49,7 @@ app.config(function($routeProvider) {
   var alreadyLoggedIn = function($location, AuthenticationService) {
     var user = AuthenticationService.getUser();    
     if (Object.getOwnPropertyNames(user).length != 0) {                 
-      if (user.name) {                        
+      if (user.name && user.token && user.refreshToken) {                        
         $location.path("/tasks");    
         
       } 
