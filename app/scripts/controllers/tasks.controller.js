@@ -9,7 +9,7 @@
  */
 angular.module('IguassuControllers').controller(
   'TasksCtrl',
-  function ($scope, $routeParams, TasksService) {
+  function ($scope, $routeParams, JobsService) {
     
     $scope.job = undefined;
     $scope.search = undefined;
@@ -34,7 +34,7 @@ angular.module('IguassuControllers').controller(
       var errorCallback = function(error) {
         console.log(error);
       };
-      TasksService.getTask(id, successCallback, errorCallback);
+      JobsService.getTask(id, successCallback, errorCallback);
     };
 
     var showsTasks = function () {

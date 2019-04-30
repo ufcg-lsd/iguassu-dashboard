@@ -31,7 +31,7 @@
     <input onchange="angular.element(this).scope().fileChanged(this)" type="file" accept="*" />
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="submitJDF()">OK</button>
+    <button class="btn btn-primary" type="button" ng-click="submitJDF()">Submit</button>
     <button class="btn btn-warning" type="button" ng-click="closeModal()">Cancel</button>
   </div>
 </script>
@@ -48,7 +48,7 @@
       <input type="text" class="form-control" id="inputSuccess2" aria-describedby="inputPesquisarStatus" placeholder="Search..."
         ng-model="search">
       <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
-      <span id="inputPesquisarStatus" class="sr-only">Termo da pesquisa</span>
+      <span id="inputPesquisarStatus" class="sr-only">Search word</span>
     </div>
   </div>
 </div>
@@ -79,7 +79,7 @@
         </td>
         <td class="col-md-1">
             <div class="text-center">                
-                <button class="btn btn-sm col-md-12" ng-click="stopJob(job);" >Stop</button>
+                <button class="btn btn-sm col-md-12" ng-click="stopJob(job);"> Stop </button>
             </div>          
         </td>
       </tr>

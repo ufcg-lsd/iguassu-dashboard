@@ -9,7 +9,7 @@
  */
 angular.module('IguassuControllers').controller(
 	'JobsCtrl',
-	function ($scope, $uibModal,toastr, TasksService) {
+	function ($scope, $uibModal,toastr, JobsService) {
 
 		$scope.jobs = [];
 		$scope.search = [];		
@@ -21,7 +21,7 @@ angular.module('IguassuControllers').controller(
 			var failCallback = function (error) {
 				console.log(error);
 			};
-			TasksService.getTasksList(successCallback, failCallback);
+			JobsService.getTasksList(successCallback, failCallback);
 		};		
 
 		$scope.updateTaskList();
@@ -29,6 +29,8 @@ angular.module('IguassuControllers').controller(
 		$scope.getStatusString = function (job) {			
 			let tasksCompleted = 0;
 			const COMPLETED = "COMPLETED";
+			const CREATED = "CREATED";
+			const RUNNING = "RUNNING";
 
 			job.tasks.forEach(function(task){
 				if (task.state === COMPLETED) {
@@ -38,7 +40,7 @@ angular.module('IguassuControllers').controller(
 
 			let currentState = job.state;
 
-			if (currentState === "CREATED") { currentState = "RUNNING"; }
+			if (currentState === CREATED) { currentState = RUNNING; }
 			
 			return (tasksCompleted !== 0 && tasksCompleted === job.tasks.length ) 
 				? COMPLETED : currentState;
@@ -46,7 +48,7 @@ angular.module('IguassuControllers').controller(
 
 		$scope.stopJob = function (job) {
 			if (window.confirm('Do you want to stop the job ' + job.id + ' ' + job.name + ' ?')) {
-				TasksService.deleteJob(
+				JobsService.deleteJob(
 					job.id,
 					function (data) {
 						if (data === job.id) {
