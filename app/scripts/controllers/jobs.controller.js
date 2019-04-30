@@ -16,43 +16,17 @@ angular.module('IguassuControllers').controller(
 
 		$scope.updateJobList = function () {
 			var successCallback = function (data) {
-				$scope.jobs = data;
+				$scope.jobs = data;				
 			};
 			var failCallback = function (error) {
 				console.log(error);
 			};
 			JobsService.getAllJobs(successCallback, failCallback);
 		};	
-		
-		var updateJobListPeriodically = function () {
-			const INTERVAL_5_SECONDS = 10000;
-			setInterval(() =>
-				$scope.updateJobList(),
-					INTERVAL_5_SECONDS
-			);
-		};	
-		
-		updateJobListPeriodically();
 
-		$scope.getStatusString = function (job) {			
-			let tasksCompleted = 0;
-			const COMPLETED = "COMPLETED";
-			const CREATED = "CREATED";
-			const RUNNING = "RUNNING";
-
-			job.tasks.forEach(function(task){
-				if (task.state === COMPLETED) {
-					tasksCompleted++;
-				};
-			});
-
-			let currentState = job.state;
-
-			if (currentState === CREATED) { currentState = RUNNING; }
-			
-			return (tasksCompleted !== 0 && tasksCompleted === job.tasks.length ) 
-				? COMPLETED : currentState;
-		};
+		$scope.getStatusString = function (job) {		
+			return job.state ? job.state : "SUBMITTING";
+		}
 
 		$scope.stopJob = function (job) {
 			if (window.confirm('Do you want to stop the job ' + job.id + ' ' + job.name + ' ?')) {
@@ -96,4 +70,15 @@ angular.module('IguassuControllers').controller(
 				}
 			);
 		};
-	});
+
+		var updateJobListPeriodically = function () {
+			const INTERVAL_1_SECOND = 1000;
+			setInterval(() =>
+				$scope.updateJobList(),
+				INTERVAL_1_SECOND
+			);
+		};	
+		
+		updateJobListPeriodically();
+	}
+);

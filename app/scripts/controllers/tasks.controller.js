@@ -23,7 +23,7 @@ angular.module('IguassuControllers').controller(
         returnedTaskList.forEach(updateTaskStatus);
     };
 
-    $scope.getTask = function(id) {
+    $scope.getJobById = function(id) {
       var successCallback = function(job) {
         if (!$scope.job) {
           $scope.job = job;
@@ -40,7 +40,7 @@ angular.module('IguassuControllers').controller(
     var showsTasks = function () {
         $scope.getJobById($routeParams.job);
 
-        const INTERVAL_5_SECONDS = 10000;
+        const INTERVAL_5_SECONDS = 5000;
         setInterval(() =>
             $scope.getJobById($routeParams.job),
             INTERVAL_5_SECONDS
