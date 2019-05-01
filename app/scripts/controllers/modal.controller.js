@@ -9,7 +9,7 @@
  */
 angular.module('IguassuControllers').controller(
 	'SubmissionModalCtrl',
-	function ($scope, $uibModalInstance, TasksService) {
+	function ($scope, $uibModalInstance, JobsService) {
 		$scope.jdffile = undefined;
 
 		$scope.fileChanged = function (element) {
@@ -33,7 +33,7 @@ angular.module('IguassuControllers').controller(
 				$scope.clearJDF();
 				$uibModalInstance.dismiss(error.data);
 			};
-			TasksService.postJob($scope.jdffile, successCallback, errorCallback);
+			JobsService.postJob($scope.jdffile, successCallback, errorCallback);
 		};
 
 		$scope.closeModal = function () {

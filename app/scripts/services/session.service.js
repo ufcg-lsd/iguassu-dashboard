@@ -48,6 +48,10 @@ angular.module('IguassuServices').service(
 		session.getUser = function () {
 			return getLocalStoredUser();
 		};
+
+		session.userIsLogged = function () {
+			return Object.getOwnPropertyNames(session.getUser()).length !== 0;
+		};
 		
 		return session;
 	}

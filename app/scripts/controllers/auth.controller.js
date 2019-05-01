@@ -9,8 +9,7 @@
  */
 angular
   .module("IguassuControllers")
-  .controller("AuthCtrl", function(
-    $rootScope,
+  .controller("AuthCtrl", function(    
     $scope,
     $location,
     $window,

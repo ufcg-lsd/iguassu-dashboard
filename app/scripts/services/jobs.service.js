@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('IguassuServices').service(
-	'TasksService',
+	'JobsService',
 	function (appConfig, NonceService, Session, $http) {
-		var tasksService = {};
+		var jobsService = {};
 
 		var resourceJobUrl = appConfig.iguassuServerHost + appConfig.jobEndpoint;
 
-		tasksService.getTasksList = function (callbackSuccess, callbackError) {
+		jobsService.getAllJobs = function (callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {
 				var successCallback = function (response) {			
 					callbackSuccess(response.data);
@@ -28,7 +28,7 @@ angular.module('IguassuServices').service(
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
 
-		tasksService.getTask = function (jobId, callbackSuccess, callbackError) {
+		jobsService.getJobById = function (jobId, callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {
 				var successCallback = function (response) {
 					callbackSuccess(response.data);
@@ -51,7 +51,7 @@ angular.module('IguassuServices').service(
 			}
 		};
 
-		tasksService.postJob = function (jdffile, callbackSuccess, callbackError) {
+		jobsService.postJob = function (jdffile, callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {
 				var user = Session.getUser();
 				var creds = {
@@ -84,7 +84,7 @@ angular.module('IguassuServices').service(
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
 
-		tasksService.deleteJob = function (jobId, callbackSuccess, callbackError) {
+		jobsService.deleteJob = function (jobId, callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {
 				var user = Session.getUser();
 				var creds = {
@@ -111,6 +111,6 @@ angular.module('IguassuServices').service(
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
 
-		return tasksService;
+		return jobsService;
 	}
 );

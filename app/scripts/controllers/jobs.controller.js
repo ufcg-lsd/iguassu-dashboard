@@ -9,50 +9,34 @@
  */
 angular.module('IguassuControllers').controller(
 	'JobsCtrl',
-	function ($scope, $uibModal,toastr, TasksService) {
+	function ($scope, $uibModal,toastr, JobsService, Session, UtilService) {
 
 		$scope.jobs = [];
-		$scope.search = [];		
+		$scope.search = [];				
 
-		$scope.updateTaskList = function () {
+		$scope.updateJobList = function () {
 			var successCallback = function (data) {
-				$scope.jobs = data;
+				$scope.jobs = data;				
 			};
 			var failCallback = function (error) {
 				console.log(error);
-			};
-			TasksService.getTasksList(successCallback, failCallback);
-		};		
+			};			
+			JobsService.getAllJobs(successCallback, failCallback);
+		};	
 
-		$scope.updateTaskList();
-
-		$scope.getStatusString = function (job) {			
-			let tasksCompleted = 0;
-			const COMPLETED = "COMPLETED";
-
-			job.tasks.forEach(function(task){
-				if (task.state === COMPLETED) {
-					tasksCompleted++;
-				};
-			});
-
-			let currentState = job.state;
-
-			if (currentState === "CREATED") { currentState = "RUNNING"; }
-			
-			return (tasksCompleted !== 0 && tasksCompleted === job.tasks.length ) 
-				? COMPLETED : currentState;
-		};
+		$scope.getStatusString = function (job) {		
+			return job.state ? job.state : "SUBMITTING";
+		}
 
 		$scope.stopJob = function (job) {
 			if (window.confirm('Do you want to stop the job ' + job.id + ' ' + job.name + ' ?')) {
-				TasksService.deleteJob(
+				JobsService.deleteJob(
 					job.id,
 					function (data) {
 						if (data === job.id) {
 							toastr.success('The job ID ' + job.id + ' was stopped.', 'Job stopped');
 						}
-						$scope.updateTaskList();
+						$scope.updateJobList();
 					},
 					function (error) {
 						console.log(error);
@@ -78,12 +62,26 @@ angular.module('IguassuControllers').controller(
 					if (jobId) {
 						toastr.success('Job ' + jobId + ' submitted.');
 					}
-					$scope.updateTaskList();
+					$scope.updateJobList();
 				},
 				function (error) {
 					toastr.error(error);
-					$scope.updateTaskList();
+					$scope.updateJobList();
 				}
 			);
 		};
-	});
+
+		var updateJobListPeriodically = function () {
+			const INTERVAL_1_SECOND = 1000;
+			const refreshIntervalId = setInterval(() =>
+				$scope.updateJobList(),
+				INTERVAL_1_SECOND
+			);
+			UtilService.addIntervalId(refreshIntervalId);
+		};			
+
+		if (Session.userIsLogged()) {
+			updateJobListPeriodically();
+		} 		
+	}
+);
