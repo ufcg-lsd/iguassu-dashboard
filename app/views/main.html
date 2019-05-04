@@ -62,14 +62,14 @@
     <tbody ng-show="jobs.length">
       <tr ng-repeat="job in jobs | filter:search">
         <td class="col-md-2">
-          <a ng-href="/#!/tasks/{{job.id}}">
+          <a ng-href="/#!/jobs/{{job.id}}">
             <div class="col-md-12">
               {{getStatusString(job)}}
             </div>
           </a>
         </td>
         <td class="col-md-9">
-          <a ng-href="/#!/tasks/{{job.id}}">
+          <a ng-href="/#!/jobs/{{job.id}}">
             <div class="col-md-12">
               {{(job.name) ? job.name : job.id}}
             </div>
@@ -77,17 +77,10 @@
         </td>
         <td class="col-md-1">
             <div class="text-center">                
-                <button class="btn btn-sm col-md-12" ng-click="stopJob(job);"> Stop </button>
+                <button class="btn btn-sm col-md-12" ng-disabled="!jobIsFinished(job)" ng-click="removeJob(job);"> Remove </button>
             </div>          
         </td>
       </tr>
-    </tbody>
-    <tbody ng-hide="jobs.length">
-      <tr>
-        <td colspan="3">
-          No jobs to show.
-        </td>
-      </tr>
-    </tbody>
+    </tbody>    
   </table>
 </div>

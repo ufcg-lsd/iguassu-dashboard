@@ -11,24 +11,23 @@ angular.module('IguassuControllers').controller(
   'TasksCtrl',
   function ($scope, $routeParams, JobsService, UtilService) {
     
-    $scope.job = undefined;
+    $scope.tasks = [];
     $scope.search = undefined;
+    $scope.job = undefined;
 
     var updateTasks = function (returnedTaskList) {
         function updateTaskStatus(element, index, array) { 
-            if ($scope.job.tasks[index].state !== undefined) {
-              $scope.job.tasks[index].state = element.state;
-            }            
+          if ($scope.tasks[index].state !== undefined) {
+            $scope.tasks[index].state = element.state;
+          }            
         }
         returnedTaskList.forEach(updateTaskStatus);
     };
 
     $scope.getJobById = function(id) {
-      var successCallback = function(job) {
+      var successCallback = function(job) {        
         if (!$scope.job) {
           $scope.job = job;
-        } else {
-            updateTasks(job.tasks);
         }
       };
       var errorCallback = function(error) {
@@ -37,14 +36,30 @@ angular.module('IguassuControllers').controller(
       JobsService.getJobById(id, successCallback, errorCallback);
     };
 
+    $scope.getTasksByJobId = function(id) {
+      var successCallback = function(tasks) {        
+        if ($scope.tasks.length === 0) {
+          $scope.tasks = tasks;
+        } else {
+          updateTasks(tasks);
+        }
+      };
+      var errorCallback = function(error) {
+        console.log(error);
+      };
+      JobsService.getJobTasks(id, successCallback, errorCallback);
+    };
+
     var showsTasks = function () {
+        $scope.getTasksByJobId($routeParams.job);
         $scope.getJobById($routeParams.job);
 
         const INTERVAL_5_SECONDS = 5000;
         const refreshIntervalId = setInterval(() =>
-            $scope.getJobById($routeParams.job),
+            $scope.getTasksByJobId($routeParams.job),
             INTERVAL_5_SECONDS
         );
+        
         UtilService.addIntervalId(refreshIntervalId);
     };
 

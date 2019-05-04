@@ -16,7 +16,7 @@ angular.module('IguassuControllers').controller(
 
 		$scope.updateJobList = function () {
 			var successCallback = function (data) {
-				$scope.jobs = data;				
+				$scope.jobs = data;					
 			};
 			var failCallback = function (error) {
 				console.log(error);
@@ -28,21 +28,23 @@ angular.module('IguassuControllers').controller(
 			return job.state ? job.state : "SUBMITTING";
 		}
 
-		$scope.stopJob = function (job) {
-			if (window.confirm('Do you want to stop the job ' + job.id + ' ' + job.name + ' ?')) {
-				JobsService.deleteJob(
-					job.id,
-					function (data) {
-						if (data === job.id) {
-							toastr.success('The job ID ' + job.id + ' was stopped.', 'Job stopped');
-						}
-						$scope.updateJobList();
-					},
-					function (error) {
-						console.log(error);
-						toastr.error('Error code: ' + error.code + ', Description: ' + error.data, 'Error while trying to stop job ID: ' + job.id + '.');
+		$scope.jobIsFinished = function (job) {
+			return job.state === "FINISHED";
+		}
+
+		$scope.removeJob = function (job) {
+			if (window.confirm('Do you want to remove the job ' + job.name + ' ?')) {
+				var successCallback = function (data) {					
+					if (data.id === job.id) {
+						toastr.success('The job ' + job.name + ' was removed.', 'Job removed');
 					}
-				);
+					$scope.updateJobList();
+				}
+				var errorCallback = function (error) {					
+					toastr.error('Error code: ' + error.code + ', Description: ' + error.data, 'Error while trying to remove job: ' + job.name + '.');
+				}
+
+				JobsService.deleteJob(job.id, successCallback, errorCallback);
 			}
 		};
 
@@ -60,7 +62,7 @@ angular.module('IguassuControllers').controller(
 			modalInstance.result.then(
 				function (jobId) {
 					if (jobId) {
-						toastr.success('Job ' + jobId + ' submitted.');
+						toastr.success('Job submitted.');
 					}
 					$scope.updateJobList();
 				},
@@ -72,10 +74,10 @@ angular.module('IguassuControllers').controller(
 		};
 
 		var updateJobListPeriodically = function () {
-			const INTERVAL_1_SECOND = 1000;
+			const INTERVAL_5_SECOND = 5000;
 			const refreshIntervalId = setInterval(() =>
 				$scope.updateJobList(),
-				INTERVAL_1_SECOND
+				INTERVAL_5_SECOND
 			);
 			UtilService.addIntervalId(refreshIntervalId);
 		};			
@@ -83,5 +85,7 @@ angular.module('IguassuControllers').controller(
 		if (Session.userIsLogged()) {
 			updateJobListPeriodically();
 		} 		
+
+		$scope.updateJobList();
 	}
 );

@@ -2,7 +2,7 @@
 
 angular.module('IguassuServices').service(
 	'NonceService',
-	function (appConfig) {
+	function (appConfig, $http) {
 		var nonceServ = {};
 		var resourceNonceUrl = appConfig.iguassuServerHost + appConfig.nonceEndpoint;
 
@@ -10,9 +10,9 @@ angular.module('IguassuServices').service(
 			var successCallback = function (response) {
 				callbackSuccess(response.data);
 			};
-			axios.get(resourceNonceUrl)
-				.then(successCallback)
-				.catch(callbackError);
+			$http
+				.get(resourceNonceUrl)
+				.then(successCallback, callbackError);
 		};
 		return nonceServ;
 	}
