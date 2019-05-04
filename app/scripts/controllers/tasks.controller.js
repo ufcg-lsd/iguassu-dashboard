@@ -13,6 +13,7 @@ angular.module('IguassuControllers').controller(
     
     $scope.tasks = [];
     $scope.search = undefined;
+    $scope.job = undefined;
 
     var updateTasks = function (returnedTaskList) {
         function updateTaskStatus(element, index, array) { 
@@ -24,6 +25,19 @@ angular.module('IguassuControllers').controller(
     };
 
     $scope.getJobById = function(id) {
+      var successCallback = function(job) {
+        console.log(job);
+        if (!$scope.job) {
+          $scope.job = job;
+        }
+      };
+      var errorCallback = function(error) {
+        console.log(error);
+      };
+      JobsService.getJobById(id, successCallback, errorCallback);
+    };
+
+    $scope.getTasksByJobId = function(id) {
       var successCallback = function(tasks) {
         console.log(tasks);
         if ($scope.tasks.length === 0) {
@@ -39,13 +53,15 @@ angular.module('IguassuControllers').controller(
     };
 
     var showsTasks = function () {
+        $scope.getTasksByJobId($routeParams.job);
         $scope.getJobById($routeParams.job);
 
         const INTERVAL_5_SECONDS = 5000;
         const refreshIntervalId = setInterval(() =>
-            $scope.getJobById($routeParams.job),
+            $scope.getTasksByJobId($routeParams.job),
             INTERVAL_5_SECONDS
         );
+        
         UtilService.addIntervalId(refreshIntervalId);
     };
 
