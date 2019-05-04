@@ -34,21 +34,18 @@ angular.module('IguassuControllers').controller(
 		}
 
 		$scope.removeJob = function (job) {
-			if (window.confirm('Do you want to remove the job ' + job.id + ' ' + job.name + ' ?')) {
-				JobsService.deleteJob(
-					job.id,
-					function (data) {
-						console.log("data returned by delete :" + data)
-						if (data === job.id) {
-							toastr.success('The job ID ' + job.id + ' was removed.', 'Job removed');
-						}
-						$scope.updateJobList();
-					},
-					function (error) {
-						console.log(error);
-						toastr.error('Error code: ' + error.code + ', Description: ' + error.data, 'Error while trying to remove job: ' + job.name + '.');
+			if (window.confirm('Do you want to remove the job ' + job.name + ' ?')) {
+				var successCallback = function (data) {					
+					if (data.id === job.id) {
+						toastr.success('The job ID ' + job.name + ' was removed.', 'Job removed');
 					}
-				);
+					$scope.updateJobList();
+				}
+				var errorCallback = function (error) {					
+					toastr.error('Error code: ' + error.code + ', Description: ' + error.data, 'Error while trying to remove job: ' + job.name + '.');
+				}
+
+				JobsService.deleteJob(job.id, successCallback, errorCallback);
 			}
 		};
 
@@ -66,7 +63,7 @@ angular.module('IguassuControllers').controller(
 			modalInstance.result.then(
 				function (jobId) {
 					if (jobId) {
-						toastr.success('Job ' + jobId + ' submitted.');
+						toastr.success('Job submitted.');
 					}
 					$scope.updateJobList();
 				},
@@ -78,10 +75,10 @@ angular.module('IguassuControllers').controller(
 		};
 
 		var updateJobListPeriodically = function () {
-			const INTERVAL_1_SECOND = 1000;
+			const INTERVAL_10_SECOND = 10000;
 			const refreshIntervalId = setInterval(() =>
 				$scope.updateJobList(),
-				INTERVAL_1_SECOND
+				INTERVAL_10_SECOND
 			);
 			UtilService.addIntervalId(refreshIntervalId);
 		};			
@@ -89,5 +86,7 @@ angular.module('IguassuControllers').controller(
 		if (Session.userIsLogged()) {
 			updateJobListPeriodically();
 		} 		
+
+		$scope.updateJobList();
 	}
 );

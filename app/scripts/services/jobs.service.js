@@ -101,12 +101,9 @@ angular.module('IguassuServices').service(
 						}
 					}
 				)
-				.then(
-					function (response) {
-						callbackSuccess(response.data);
-					},
-					callbackError					
-				);
+				.then( function (response) {
+					callbackSuccess(response.data)
+				}, callbackError);				
 			};
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
