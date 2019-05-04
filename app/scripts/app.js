@@ -50,7 +50,7 @@ app.config(function($routeProvider) {
     var user = AuthenticationService.getUser();    
     if (Object.getOwnPropertyNames(user).length != 0) {                 
       if (user.name && user.token && user.refreshToken) {                        
-        $location.path("/tasks");    
+        $location.path("/jobs");    
         
       } 
     } else {
@@ -78,14 +78,14 @@ app.config(function($routeProvider) {
       },
       controller: "AuthCtrl"
     })
-    .when("/tasks", {
+    .when("/jobs", {
       templateUrl: "views/main.html",
       resolve: {
         check: alreadyLoggedIn
       },
       controller: "JobsCtrl"
     })
-    .when("/tasks/:job", {
+    .when("/jobs/:job", {
       templateUrl: "views/tasks.html",
       resolve: {
         check: checkUser
