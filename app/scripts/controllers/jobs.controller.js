@@ -74,10 +74,10 @@ angular.module('IguassuControllers').controller(
 		};
 
 		var updateJobListPeriodically = function () {
-			const INTERVAL_10_SECOND = 10000;
+			const INTERVAL_5_SECOND = 5000;
 			const refreshIntervalId = setInterval(() =>
 				$scope.updateJobList(),
-				INTERVAL_10_SECOND
+				INTERVAL_5_SECOND
 			);
 			UtilService.addIntervalId(refreshIntervalId);
 		};			

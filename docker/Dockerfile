@@ -24,5 +24,3 @@ WORKDIR /root
 RUN \
     git clone -b $DASHBOARD_BRANCH https://github.com/fogbow/iguassu-dashboard.git --single-branch && \
     (cd iguassu-dashboard && npm install && bower install --allow-root)
-
-CMD ["/bin/bash", "-c", "cd iguassu-dashboard && grunt serve"]
