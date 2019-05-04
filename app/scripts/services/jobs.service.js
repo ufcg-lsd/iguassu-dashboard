@@ -28,9 +28,32 @@ angular.module('IguassuServices').service(
 			NonceService.getNonce(nonceCallback, callbackError);
 		};
 
-		jobsService.getJobById = function (jobId, callbackSuccess, callbackError) {
+		jobsService.getJobTasks = function (jobId, callbackSuccess, callbackError) {
 			var nonceCallback = function (nonce) {
 				var successCallback = function (response) {
+					callbackSuccess(response.data);
+				};
+
+				var user = Session.getUser();
+				var creds = {
+					username: user.name,
+					token: user.token,
+					nonce: nonce
+				};
+				$http.get(
+					resourceJobUrl + "/" + jobId + "/tasks",
+					{ headers: {'X-auth-credentials': JSON.stringify(creds)} }
+				)
+					.then(successCallback,callbackError);					
+			};
+			if (jobId !== undefined) {
+				NonceService.getNonce(nonceCallback, callbackError);
+			}
+		};
+
+		jobsService.getJobById = function (jobId, callbackSuccess, callbackError) {
+			var nonceCallback = function (nonce) {
+				var successCallback = function (response) {					
 					callbackSuccess(response.data);
 				};
 

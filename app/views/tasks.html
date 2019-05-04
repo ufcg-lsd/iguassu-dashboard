@@ -38,8 +38,8 @@
   </div>
 </div>
 
-<div class="tasks" ng-show="job.tasks.length">
-  <div class="task" ng-repeat="task in job.tasks | filter:search">
+<div class="tasks" ng-show="tasks.length">
+  <div class="task" ng-repeat="task in tasks | filter:search">
     <div class="task-status" ng-class="'task-status-'.concat(task.state.toLowerCase())">
       {{task.state}}
     </div>

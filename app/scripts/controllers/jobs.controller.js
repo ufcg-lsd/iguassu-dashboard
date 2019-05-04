@@ -37,7 +37,7 @@ angular.module('IguassuControllers').controller(
 			if (window.confirm('Do you want to remove the job ' + job.name + ' ?')) {
 				var successCallback = function (data) {					
 					if (data.id === job.id) {
-						toastr.success('The job ID ' + job.name + ' was removed.', 'Job removed');
+						toastr.success('The job ' + job.name + ' was removed.', 'Job removed');
 					}
 					$scope.updateJobList();
 				}

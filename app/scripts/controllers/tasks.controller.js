@@ -11,30 +11,31 @@ angular.module('IguassuControllers').controller(
   'TasksCtrl',
   function ($scope, $routeParams, JobsService, UtilService) {
     
-    $scope.job = undefined;
+    $scope.tasks = [];
     $scope.search = undefined;
 
     var updateTasks = function (returnedTaskList) {
         function updateTaskStatus(element, index, array) { 
-            if ($scope.job.tasks[index].state !== undefined) {
-              $scope.job.tasks[index].state = element.state;
-            }            
+          if ($scope.tasks[index].state !== undefined) {
+            $scope.tasks[index].state = element.state;
+          }            
         }
         returnedTaskList.forEach(updateTaskStatus);
     };
 
     $scope.getJobById = function(id) {
-      var successCallback = function(job) {
-        if (!$scope.job) {
-          $scope.job = job;
+      var successCallback = function(tasks) {
+        console.log(tasks);
+        if ($scope.tasks.length === 0) {
+          $scope.tasks = tasks;
         } else {
-            updateTasks(job.tasks);
+          updateTasks(tasks);
         }
       };
       var errorCallback = function(error) {
         console.log(error);
       };
-      JobsService.getJobById(id, successCallback, errorCallback);
+      JobsService.getJobTasks(id, successCallback, errorCallback);
     };
 
     var showsTasks = function () {
