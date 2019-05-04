@@ -25,8 +25,7 @@ angular.module('IguassuControllers').controller(
     };
 
     $scope.getJobById = function(id) {
-      var successCallback = function(job) {
-        console.log(job);
+      var successCallback = function(job) {        
         if (!$scope.job) {
           $scope.job = job;
         }
@@ -38,8 +37,7 @@ angular.module('IguassuControllers').controller(
     };
 
     $scope.getTasksByJobId = function(id) {
-      var successCallback = function(tasks) {
-        console.log(tasks);
+      var successCallback = function(tasks) {        
         if ($scope.tasks.length === 0) {
           $scope.tasks = tasks;
         } else {
