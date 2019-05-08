@@ -3,6 +3,4 @@
 DIRNAME=`dirname $0`
 cd $DIRNAME/..
 
-readonly DASHBOARD_PORT=9000
-
-kill -9 $(lsof -ti tcp:$DASHBOARD_PORT)
+kill -9 $(ps aux | grep -v "grep" | grep grunt | awk '{print $2}')
