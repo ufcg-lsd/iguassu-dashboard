@@ -2,15 +2,15 @@
 
 /**
  * @ngdoc overview
- * @name ArrebolApp
+ * @name IguassuApp
  * @description
- * # ArrebolApp
+ * # IguassuApp
  *
  * Main module of the application.
  */
-var app = angular.module("ArrebolApp", [
-  "ArrebolControllers",
-  "ArrebolServices",
+var app = angular.module("IguassuApp", [
+  "IguassuControllers",
+  "IguassuServices",
   "ngAnimate",
   "ngCookies",
   "ngResource",
@@ -21,10 +21,9 @@ var app = angular.module("ArrebolApp", [
   "toastr"
 ]);
 
-angular.module("ArrebolControllers", ["ngResource"]);
-angular.module("ArrebolServices", ["ngResource"]);
+angular.module("IguassuControllers", ["ngResource"]);
+angular.module("IguassuServices", ["ngResource"]);
 
-// Import variables if present (from env.js)
 var env = {};
 if (window) {
   Object.assign(env, window.__env);
@@ -47,23 +46,25 @@ app.constant(
 );
 
 app.config(function($routeProvider) {
-  var checkUser = function($location, AuthenticationService) {
-    if (!AuthenticationService.checkCAFeUser()) {
+  var alreadyLoggedIn = function($location, AuthenticationService) {
+    var user = AuthenticationService.getUser();    
+    if (Object.getOwnPropertyNames(user).length != 0) {                 
+      if (user.name && user.token && user.refreshToken) {                        
+        $location.path("/jobs");    
+        
+      } 
+    } else {
       $location.path("/");
     }
-  };
+  }
 
-  var alreadyLoggedIn = function($location, AuthenticationService) {
-    if (
-      AuthenticationService.checkIfUrlHasCAFeEduUsername() ||
-      AuthenticationService.checkCAFeUser()
-    ) {
-      var user = AuthenticationService.getUser();
-      if (user.name) { // if null, user has not authenticated on owncloud
-        $location.url("/tasks");
-      } else {
-        $location.url("/owncloud");
-      }
+  var checkUser = function($location, AuthenticationService) {
+    var user = AuthenticationService.getUser();    
+    if (Object.getOwnPropertyNames(user).length != 0) {                 
+      if (user.name) {                        
+        $location.path($location.url());    
+        
+      } 
     } else {
       $location.path("/");
     }
@@ -71,34 +72,27 @@ app.config(function($routeProvider) {
 
   $routeProvider
     .when("/", {
-      templateUrl: "views/login.html",
-      resolve: {
-        check: alreadyLoggedIn
-      },
-      controller: "AuthCtrl"
-    })
-    .when("/tasks", {
-      templateUrl: "views/main.html",
-      resolve: {
-        check: alreadyLoggedIn
-      },
-      controller: "MainCtrl"
-    })
-    .when("/tasks/:job", {
-      templateUrl: "views/tasks.html",
-      resolve: {
-        check: checkUser
-      },
-      controller: "TasksCtrl"
-    })
-    .when("/owncloud", {
       templateUrl: "views/authowncloud.html",
       resolve: {
         check: alreadyLoggedIn
       },
       controller: "AuthCtrl"
     })
+    .when("/jobs", {
+      templateUrl: "views/main.html",
+      resolve: {
+        check: alreadyLoggedIn
+      },
+      controller: "JobsCtrl"
+    })
+    .when("/jobs/:job", {
+      templateUrl: "views/tasks.html",
+      resolve: {
+        check: checkUser
+      },
+      controller: "TasksCtrl"
+    })
     .otherwise({
-      redirectTo: "/tasks"
+      redirectTo: "/"
     });
 });

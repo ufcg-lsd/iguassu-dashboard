@@ -1,3 +1,27 @@
+<header ng-controller="AuthCtrl">
+  <div ng-if="getUsername()">
+    <div class="top-bar-upper">
+      <div class="container-fluid">
+        <div class="text-right logout-icon" ng-click="doLogout()">
+          <b>{{getUsername()}}</b>    
+        </div>
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-2 col-lg-offset-5">
+              <a href="/">
+                <img style="border-radius: 50%;" src="images/10fundoazul.png" alt="Iguassu" class="logo" />
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="top-bar-bottom">
+      <div class="col-md-offset-11 col-md-1">
+        <!-- <img src="images/logo2.png" alt="Iguassu" class="logo" /> -->
+      </div>
+    </div>      
+  </div>
+</header>
+
 <div class="row">
   <div class="col-sm-8">
     <div class="job-title">
@@ -6,16 +30,16 @@
   </div>
   <div class="col-sm-4">
     <div class="form-group has-feedback">
-      <input type="text" class="form-control" id="inputSuccess2" aria-describedby="inputPesquisarStatus" placeholder="Pesquisar..."
+      <input type="text" class="form-control" id="inputSuccess2" aria-describedby="inputPesquisarStatus" placeholder="Search..."
         ng-model="search">
       <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
-      <span id="inputPesquisarStatus" class="sr-only">Termo da pesquisa</span>
+      <span id="inputPesquisarStatus" class="sr-only">Search word</span>
     </div>
   </div>
 </div>
 
-<div class="tasks" ng-show="job.tasks.length">
-  <div class="task" ng-repeat="task in job.tasks | filter:search">
+<div class="tasks" ng-show="tasks.length">
+  <div class="task" ng-repeat="task in tasks | filter:search">
     <div class="task-status" ng-class="'task-status-'.concat(task.state.toLowerCase())">
       {{task.state}}
     </div>

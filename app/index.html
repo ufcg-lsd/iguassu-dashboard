@@ -3,7 +3,9 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title> Iguassu - A tool for monitoring and executing jobs in a multi-cloud environment.</title>
+  <base href="/">
+
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <!-- build:css(.) styles/vendor.css -->
@@ -17,35 +19,13 @@
 
   <!-- Load environment variables -->
   <script src="env.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
-<body ng-app="ArrebolApp">
+<body ng-app="IguassuApp">
   <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-  <header ng-controller="AuthCtrl">
-    <div ng-if="getUsername()">
-      <div class="top-bar-upper">
-        <div class="container-fluid">
-          <div class="text-right logout-icon" ng-click="doLogout()">
-            <b>{{getUsername()}}</b>    
-          </div>
-          <div class="row">
-            <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-2 col-lg-offset-5">
-                <a href="/">
-                  <img src="images/10fundoazul.png" alt="Arrebol" class="logo" />
-                </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="top-bar-bottom">
-        <div class="col-md-offset-11 col-md-1">
-          <!--<img src="images/logo2.png" alt="Arrebol" class="logo" />-->
-        </div>
-      </div>      
-    </div>
-  </header>
+    <![endif]-->  
   <div class="page-wrapper">
     <div class="container">
       <div class="row">
@@ -53,7 +33,7 @@
           class="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-4 col-md-offset-4 col-lg-2 col-lg-offset-5">
           <div ng-hide="getUsername()">
             <a href="/">
-              <img src="images/logo3.png" alt="Arrebol" class="logo" />
+              <img src="images/logo3.png" alt="Iguassu App" class="logo" />
             </a>
           </div>
         </div>
@@ -61,7 +41,6 @@
       <div ng-view=""></div>
     </div>
   </div>
-
   <!-- Google Analytics: change UA-XXXXX-X to be your site's ID
      <script>
        !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
@@ -94,13 +73,16 @@
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/app.js"></script>
     <script src="scripts/configuration.js"></script>
-    <script src="scripts/controllers/main.js"></script>
-    <script src="scripts/controllers/auth.js"></script>
-    <script src="scripts/controllers/about.js"></script>
-    <script src="scripts/controllers/tasks.js"></script>
-    <script src="scripts/services/service.js"></script>
-    <!-- <script src="scripts/services/hex2a.js"></script>
-    <script src="scripts/services/arrebolapi.js"></script> -->
+    <script src="scripts/controllers/jobs.controller.js"></script>
+    <script src="scripts/controllers/auth.controller.js"></script>    
+    <script src="scripts/controllers/tasks.controller.js"></script>
+    <script src="scripts/controllers/modal.controller.js"></script>
+    <script src="scripts/services/util.service.js"></script>
+    <script src="scripts/services/session.service.js"></script>
+    <script src="scripts/services/nonce.service.js"></script>
+    <script src="scripts/services/auth.service.js"></script>
+    <script src="scripts/services/jobs.service.js"></script>
+    <script src="scripts/services/oauth.service.js"></script>    
     <!-- endbuild -->
 </body>
 

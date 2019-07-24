@@ -4,5 +4,6 @@
 /.sass-cache
 /bower_components
 .idea/
+nohup.out
 
 **/env.js

@@ -1,23 +1,23 @@
 'use strict';
 
-describe('Controller: TaskCtrl', function () {
+describe('Controller: TasksCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('ArrebolApp'));
+  beforeEach(module('IguassuApp'));
 
-  var TaskCtrl,
+  var TasksCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    TaskCtrl = $controller('TaskCtrl', {
+    TasksCtrl = $controller('TasksCtrl', {
       $scope: scope
       // place here mocked dependencies
     });
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(TaskCtrl.awesomeThings.length).toBe(3);
+    expect(TasksCtrl.awesomeThings.length).toBe(3);
   });
 });

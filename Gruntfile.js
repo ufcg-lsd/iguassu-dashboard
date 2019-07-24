@@ -73,11 +73,11 @@ module.exports = function(grunt) {
         port: 9000,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: "0.0.0.0",
-        livereload: 35728
+        livereload: false
       },
       livereload: {
         options: {
-          open: true,
+          open: false,
           middleware: function(connect) {
             return [
               serveStatic(".tmp"),
@@ -362,7 +362,7 @@ module.exports = function(grunt) {
     ngtemplates: {
       dist: {
         options: {
-          module: "ArrebolApp",
+          module: "IguassuApp",
           htmlmin: "<%= htmlmin.dist.options %>",
           usemin: "scripts/scripts.js"
         },

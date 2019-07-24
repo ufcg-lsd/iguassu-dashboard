@@ -1,3 +1,25 @@
+<header ng-controller="AuthCtrl">
+  <div ng-if="getUsername()">
+    <div class="top-bar-upper">
+      <div class="container-fluid">
+        <div class="text-right logout-icon" ng-click="doLogout()">
+          <b>{{getUsername()}}</b>    
+        </div>
+        <div class="row">
+          <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-2 col-lg-offset-5">              
+                <img style="border-radius: 50%;" src="images/10fundoazul.png" alt="Iguassu" class="logo" />              
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="top-bar-bottom">
+      <div class="col-md-offset-11 col-md-1">
+        <!-- <img src="images/logo2.png" alt="Iguassu" class="logo" /> -->
+      </div>
+    </div>      
+  </div>
+</header>
+
 <!-- Template for modal -->
 <script type="text/ng-template" id="myModalContent.html">
   <div class="modal-header">
@@ -7,7 +29,7 @@
     <input onchange="angular.element(this).scope().fileChanged(this)" type="file" accept="*" />
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="submitJDF()">OK</button>
+    <button class="btn btn-primary" type="button" ng-click="submitJDF()">Submit</button>
     <button class="btn btn-warning" type="button" ng-click="closeModal()">Cancel</button>
   </div>
 </script>
@@ -21,10 +43,10 @@
   </div>
   <div class="col-sm-4">
     <div class="form-group has-feedback">
-      <input type="text" class="form-control" id="inputSuccess2" aria-describedby="inputPesquisarStatus" placeholder="Pesquisar..."
+      <input type="text" class="form-control" id="inputSuccess2" aria-describedby="inputPesquisarStatus" placeholder="Search..."
         ng-model="search">
       <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
-      <span id="inputPesquisarStatus" class="sr-only">Termo da pesquisa</span>
+      <span id="inputPesquisarStatus" class="sr-only">Search word</span>
     </div>
   </div>
 </div>
@@ -34,36 +56,31 @@
       <tr>
         <td>Status</td>
         <td>Name</td>
-        <td>Stop job</td>
+        <td>Action</td>
       </tr>
     </thead>
     <tbody ng-show="jobs.length">
       <tr ng-repeat="job in jobs | filter:search">
         <td class="col-md-2">
-          <a ng-href="/#!/tasks/{{job.id}}">
+          <a ng-href="/#!/jobs/{{job.id}}">
             <div class="col-md-12">
               {{getStatusString(job)}}
             </div>
           </a>
         </td>
         <td class="col-md-9">
-          <a ng-href="/#!/tasks/{{job.id}}">
+          <a ng-href="/#!/jobs/{{job.id}}">
             <div class="col-md-12">
               {{(job.name) ? job.name : job.id}}
             </div>
           </a>
         </td>
         <td class="col-md-1">
-          <button class="btn btn-sm col-md-12" ng-click="stopJob(job);" align="center">Stop</button>
+            <div class="text-center">                
+                <button class="btn btn-sm col-md-12" ng-disabled="!jobIsFinished(job)" ng-click="removeJob(job);"> Remove </button>
+            </div>          
         </td>
       </tr>
-    </tbody>
-    <tbody ng-hide="jobs.length">
-      <tr>
-        <td colspan="3">
-          No jobs to show.
-        </td>
-      </tr>
-    </tbody>
+    </tbody>    
   </table>
 </div>
