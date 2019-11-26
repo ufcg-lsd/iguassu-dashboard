@@ -1,0 +1,13 @@
+const NOT_STARTED = "NOT_STARTED";
+const STARTED = "STARTED";
+const PENDING = "PENDING";
+const FINISHED = "FINISHED";
+const ERROR = "ERROR";
+
+export default {
+  NOT_STARTED,
+  STARTED,
+  PENDING,
+  FINISHED,
+  ERROR
+};
