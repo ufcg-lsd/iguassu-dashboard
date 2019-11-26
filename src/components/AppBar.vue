@@ -92,7 +92,8 @@ export default {
     drawer: true,
     items: [
       { title: "Jobs", icon: "work_outline", path: "/dash/jobs" },
-      { title: "Queues", icon: "horizontal_split", path: "/dash/queues" }
+      { title: "Queues", icon: "horizontal_split", path: "/dash/queues" },
+      { title: "Storage", icon: "folder", path: "/dash/storage" }
     ],
     miniVariant: false,
     expandOnHover: false

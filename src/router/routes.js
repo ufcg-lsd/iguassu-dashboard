@@ -9,7 +9,7 @@ import QueueDetails from "../components/QueueDetails.vue";
 const routes = [
   {
     path: "*",
-    redirect: "/dash/jobs",
+    redirect: "/dash",
     meta: { requiresAuth: true }
   },
   {
@@ -59,6 +59,13 @@ const routes = [
         component: QueueDetails,
         meta: { requiresAuth: true }
       },
+      {
+        name: "storage",
+        path: "storage",
+        beforeEnter() {
+          window.open(process.env.VUE_APP_OWNCLOUD_SERVER_HOST);
+        }
+      }
     ]
   }
 ];
