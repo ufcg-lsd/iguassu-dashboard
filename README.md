@@ -1,30 +1,32 @@
-# Iguassu Dashboard
-
-Statement Driven Executor and Scheduler.
-
-## Build & development
-
-### System requirements
-
-Install yo, grunt-cli, bower, generator-angular, generator-karma and compass globally:
-
+## Project setup
 ```
-npm install -g grunt-cli bower yo generator-karma generator-angular
-gem install compass
-```
-### Build and run
-
-Go to project folder and install project dependencies:
-
-```
-npm install
-bower install
+yarn install
 ```
 
-Go to /app directory, make a copy of env.example.js, rename to env.example and set vars' value.
+### Compiles and hot-reloads for development
+```
+yarn run serve --fix --port 8082
+```
 
-Run `grunt` for building and `grunt serve` for preview.
+### Compiles and minifies for production
+```
+yarn run build
+```
 
-## Testing
+### Run your tests
+```
+yarn run test
+```
 
-Running `grunt test` will run the unit tests with karma.
+### Lints and fixes files
+```
+yarn run lint
+```
+
+### Run your unit tests
+```
+yarn run test:unit
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

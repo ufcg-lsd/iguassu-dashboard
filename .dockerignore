@@ -1,0 +1,7 @@
+node_modules/
+
+deploy/
+
+.idea/
+
+.circleci/

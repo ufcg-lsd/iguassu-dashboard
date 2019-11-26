@@ -1,0 +1,6 @@
+const QUEUED = "QUEUED";
+const RUNNING = "RUNNING";
+const FAILED = "FAILED";
+const FINISHED = "FINISHED";
+
+export default { QUEUED, RUNNING, FAILED, FINISHED };
